@@ -1,0 +1,82 @@
+﻿@model QLThuCung.Models.DichVu
+
+<div class="container">
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+            @for (var i = 0; i < Model.AnhDichVu.Count(); i++)
+            {
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "")"
+                aria-label="Slide @(i + 1)"></button>
+            }
+        </div>
+
+        <div class="carousel-inner">
+            @for (var i = 0; i < Model.AnhDichVu.Count(); i++)
+            {
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@Model.AnhDichVu.ElementAt(i).DuongDan" class="d-block w-100" alt="Ảnh dịch vụ">
+                </div>
+            }
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <p class="title mt-3">@Model.Ten</p>
+    <p class="mt-3">@Model.MoTa</p>
+    @{
+        if(Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).Count() == 1){
+            <p class="price mt-3">@Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).FirstOrDefault().ChiPhi.ToString("N0") VNĐ</p>
+        }
+        else{
+            <p class="price mt-3">Bảng giá</p>
+            <table>
+                <tr>
+                    <th>Cân nặng</th>
+                    <th>Chi phí (VNĐ)</th>
+                </tr>
+                @{
+                    var chiTietList = Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).ToList();
+                    var n = chiTietList.Count();
+                    for (int i = 0; i < n; i++)
+                    {
+                        if (i == 0)
+                        {
+                            // Hàng cho "Dưới CanNang đầu tiên"
+                            <tr>
+                                <td>Dưới @chiTietList[i].CanNang.ToString("N0")</td>
+                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                            </tr>
+                        }
+
+                        if (i > 0)
+                        {
+                            // Hàng cho các khoảng giữa (CanNang[i-1] - CanNang[i])
+                            <tr>
+                                <td>@chiTietList[i - 1].CanNang.ToString("N0") - @chiTietList[i].CanNang.ToString("N0")</td>
+                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                            </tr>
+                        }
+
+                        if (i == n - 1)
+                        {
+                            // Hàng cho "Trên CanNang cuối cùng"
+                            <tr>
+                                <td>Trên @chiTietList[i].CanNang.ToString("N0")</td>
+                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        }
+        <a class="btn btn-primary w-100 mt-3" href="/khachhang/datlich/">Đặt lịch ngay</a>
+    }
+</div>

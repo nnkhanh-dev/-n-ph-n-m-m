@@ -1,0 +1,475 @@
+.my_navbar{
+    background-color: #3c57d2;
+    color:white !important;
+}
+
+.my_logo{
+    height: 40px;
+    width: auto;
+}
+
+.my_navbartitle{
+    font-size: 20px;
+    color:white !important;
+}
+
+.my_navbartitle a {
+    color: white !important;
+}
+
+.my_navbarcontent{
+    font-size: 18px;
+}
+
+.my_navbarcontent a {
+    color: white;
+    text-decoration: none;
+}
+
+.my_navbarcontent a:hover {
+    color: black;
+}
+
+.my_slider {
+    height: 600px;
+}
+
+.my_slider .carousel-item {
+    height: 100%;
+}
+
+.my_slider .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;        /* giữ tỉ lệ và cắt ảnh cho vừa khung */
+    object-position: center;  /* lấy phần giữa ảnh */
+}
+
+.my_sectiontitle{
+    font-size: 30px;
+    color: #3c57d2;
+    font-weight: bold;
+    margin: 32px 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.my_productcard{
+    width: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin: 10px 10px;
+}
+
+.my_productimg{
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+}
+
+.my_productimg img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;        /* giữ tỉ lệ và cắt ảnh cho vừa khung */
+    object-position: center;  /* lấy phần giữa ảnh */   
+}
+
+.my_productcontent{
+    padding: 16px;
+    color: gray;
+    margin: 0;
+}
+
+.my_producttitle{
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.my_productprice{
+    color: green;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.my_productbutton{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px 16px 16px;
+}
+
+.my_productbutton a{
+    color: white !important;
+}
+
+.my_productspecial{
+    width: 60px;
+    color: white;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #fda10d;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.my_productlist{
+    display: flex;
+}
+
+.my_servicecard {
+    width: 200px;
+    border-radius: 10px;
+}
+
+.my_serviceimg{
+    width: 100%;
+    aspect-ratio: 1 / 1;      
+    overflow: hidden;       
+    border-radius: 50%;
+}
+
+.my_serviceimg img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;        
+    object-position: center;
+}
+
+.my_servicetitle {
+    font-weight: bold;
+    font-size: 20px;
+    color: #3c57d2;
+    text-align: center;
+    margin: 16px 0px;
+}
+
+.my_employeecard{
+    width: 300px;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.my_employeecardheader{
+    width: 100%;
+    aspect-ratio: 1 / 1;      
+    padding: 32px;
+}
+
+.my_employeeimg{
+    width: 100%;
+    aspect-ratio: 1 / 1;      
+    overflow: hidden;       
+    border-radius: 50%;   
+}
+
+.my_employeeimg img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;        
+    object-position: center;
+}
+
+.my_employeetitle{
+    text-align: center;
+    color: #3c57d2;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.my_employeetitle span {
+    color: black;
+    font-size: 18px;
+    text-transform: capitalize;
+}
+
+.my_contact{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.my_contactfame{
+    width: 48%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.my_contactfame iframe{
+    width: 100%;
+    height: 100%;
+}
+
+.my_contactform{
+    width: 48%;
+}
+
+footer{
+    background-color: #3c57d2;
+    color: white;
+}
+
+.title{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+footer svg{
+    fill: white;
+    width: 30px;
+    margin-right: 16px;
+}
+
+.my_cardheader {
+    background-color: #3c57d2;
+    color:white;
+}
+
+.my_margin10{
+    margin: 8rem;
+}
+
+.my_dropdown {
+    position: relative;
+}
+
+    .my_dropdown .my_dropdownlist {
+        background-color: white;
+        padding: 6px;
+        border-radius: 5px;
+        display: none;
+    }
+
+        .my_dropdown .my_dropdownlist li {
+            list-style: none;
+            width: 100%;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+            .my_dropdown .my_dropdownlist li a {
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 14px;
+                color: #1b6392 !important;
+                display: block;
+                width: 130px;
+                padding: 0 10px;
+            }
+
+            .my_dropdown .my_dropdownlist li svg {
+                fill: #1b6392;
+                width: 18px;
+                margin-right: 10px;
+            }
+
+            .my_dropdown .my_dropdownlist li:hover {
+                background-color: #eeeee4;
+            }
+
+@media (min-width: 990.98px) {
+    .my_dropdown .my_dropdownlist {
+        position: absolute;
+        top: 100%;
+        right: 50%;
+    }
+
+        .my_dropdown .my_dropdownlist li {
+            justify-content: center;
+            padding: 16px 16px;
+        }
+}
+
+.my_count{
+  background-color: red;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 90%;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 990.98px) {
+  .my_count{
+    top: 30%;
+    left: 50%;
+  }
+}
+
+.my_dropdownlist .my_notification{
+  width: 250px;
+  display: block;
+}
+
+.my_dropdownlist .my_notification .my_notificationtitle{
+  width: 100%;
+  display: block;
+  color: #1b6392;
+  font-weight: bold;
+  margin: 0;
+}
+
+.my_dropdownlist .my_notification .my_notificationcontent{
+  width: 100%;
+  display: block;
+  font-size: 16px;
+  color: #1b6392;
+}
+
+.my_notificationtime{
+  width: 100%;
+  display: block;
+  font-size: 12px;
+  color: grey;
+  margin: 0;
+}
+
+.my_notificationall {
+    margin: 10px;
+    font-size: 16px;
+}
+
+.service_card {
+    width: 250px;
+    margin: 12px;
+}
+
+.service_card .card-header{
+    background-color: white;
+    padding: 16px 0px 0px 0px;
+    border: 0px;
+}
+
+.service_card .card-header svg{
+    fill: orange;
+    width: 18px;
+}
+
+.service_card .title{
+    color: #3c57d2;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+    margin: 0;
+}
+
+.service_card img{
+    width: 100%;
+    display: block;
+    aspect-ratio: 1/1;
+}
+
+.service_card .price{
+    font-size: 20px;
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin: 16px 0px 0px 0px;
+}
+
+.service_card .card-body{
+    font-size: 18px;
+}
+
+.service_card .card-footer{
+    background-color: white;
+    border: 0px;
+    padding-bottom: 16px;
+}
+
+.PageTitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: #3c57d2;
+}
+
+.service-detailscard .modal-header {
+    background-color: #3c57d2;
+    color: white;
+}
+
+.service-detailscard .carousel-item {
+    aspect-ratio: 2/1; /* Tạo tỷ lệ chiều rộng/chiều cao 2:1 cho phần tử */
+    overflow: hidden;  /* Ẩn phần hình ảnh bị cắt xén ra ngoài khung */
+    height: 0; /* Đặt chiều cao ban đầu là 0 */
+    padding-bottom: 50%; /* Giúp xác định chiều cao dựa trên tỷ lệ 2/1 */
+    position: relative; /* Đảm bảo phần tử có vị trí tương đối */
+}
+
+.service-detailscard .carousel-item img {
+    object-fit: cover; /* Đảm bảo hình ảnh phủ toàn bộ phần tử mà không bị kéo dãn */
+    object-position: center; /* Căn giữa hình ảnh trong phần tử */
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng */
+    height: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều cao */
+    position: absolute; /* Đảm bảo hình ảnh phủ đầy toàn bộ phần tử */
+    top: 0;
+    left: 0;
+}
+
+.service-detailscard .title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #3c57d2;
+}
+
+.service-detailscard {
+    font-size: 18px;
+}
+
+.service-detailscard .price {
+    font-size: 20px;
+    color: green;
+    font-weight: bold;
+}
+
+.service-detailscard table {
+    width: 100%;
+}
+
+.service-detailscard table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.service-detailscard th, td {
+    padding: 10px;
+}
+
+.booking-card {
+    width: 50%;
+}
+
+.booking-card .card-header {
+    background-color: #3c57d2;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
+.booking-card .card-footer{
+    background-color: white;
+    border: 0px;
+    padding: 16px;
+}
