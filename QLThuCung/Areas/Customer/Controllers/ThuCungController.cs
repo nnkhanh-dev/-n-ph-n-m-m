@@ -14,8 +14,13 @@ namespace QLThuCung.Areas.Customer.Controllers
         {
             _thuCung = thuCung;
         }
-
+        [Route("khachhang/thucung")]
         public IActionResult Index()
+        {
+            return View();
+        }
+        [Route("khachhang/thucung/chitiet")]
+        public IActionResult Details()
         {
             return View();
         }

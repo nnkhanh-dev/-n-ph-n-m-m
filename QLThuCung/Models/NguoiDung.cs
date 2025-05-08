@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace QLThuCung.Models
@@ -21,6 +22,7 @@ namespace QLThuCung.Models
         [Required]
         public DateTime NgayTao { get; set; }
         public DateTime? NgayCapNhat { get; set; }
+        [ValidateNever]
         public GioHang GioHang { get; set; }
 
     }

@@ -9,49 +9,50 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
         <p class="PageTitle m-3">Cửa hàng</p>
-        <input type="text" class="form-control" value="Tìm kiếm"></input>
+        <input type="text" class="form-control" style="width: 300px;" value="Tìm kiếm"></input>
     </div>
     <div class="row">
         <div class="col-3">
-            <div>
-                <p>Danh mục</p>
-                <ul>
-                    <li><a href="#">Thức ăn</a></li>
-                    <li><a href="#">Vòng cổ</a></li>
-                    <li><a href="#">Quần áo</a></li>
-                    <li><a href="#">Lồng vận chuyển</a></li>
+            <div class="card">
+                <p class="card-header"><strong>Danh mục</strong></p>
+                <ul class="list-unstyled p-3">
+                    <li><a href="#" class="text-decoration-none text-black"><strong>Thức ăn</strong></a></li>
+                    <li><a href="#" class="text-decoration-none text-black"><strong>Vòng cổ</strong></a></li>
+                    <li><a href="#" class="text-decoration-none text-black"><strong>Quần áo</strong></a></li>
+                    <li><a href="#" class="text-decoration-none text-black"><strong>Lồng vận chuyển</strong></a></li>
                 </ul>
             </div>
 
-            <div>
-                <p>Bộ lọc</p>
-                <div>
-                    <p>Giá</p>
-                    <input type="radio" name="TangDan"></input>
-                    <label for="TangDan">Tăng dần</label>
-                    <input type="radio" name="GiamDan"></input>
-                    <label for="GiamDan">Giảm dần</label>
+            <div class="card mt-3">
+                <p class="card-header"><strong>Bộ lọc</strong></p>
+                <div class="card-body p-3">
+                    <div>
+                        <p><strong>Giá</strong></p>
+                        <input type="radio" name="TangDan"></input>
+                        <label for="TangDan">Tăng dần</label><br>
+                        <input type="radio" name="GiamDan"></input>
+                        <label for="GiamDan">Giảm dần</label>
+                    </div>
+                    <div class="mt-3">
+                        <p><strong>Lượt bán</strong></p>
+                        <input type="radio" name="TangDan"></input>
+                        <label for="TangDan">Tăng dần</label><br>
+                        <input type="radio" name="GiamDan"></input>
+                        <label for="GiamDan">Giảm dần</label>
+                    </div>
+                    <div class="mt-3">
+                        <p><strong>Đánh giá</strong></p>
+                        <input type="radio" name="TangDan"></input>
+                        <label for="TangDan">Tăng dần</label><br>
+                        <input type="radio" name="GiamDan"></input>
+                        <label for="GiamDan">Giảm dần</label>
+                    </div>
                 </div>
-                <div>
-                    <p>Lượt bán</p>
-                    <input type="radio" name="TangDan"></input>
-                    <label for="TangDan">Tăng dần</label>
-                    <input type="radio" name="GiamDan"></input>
-                    <label for="GiamDan">Giảm dần</label>
-                </div>
-                <div>
-                    <p>Đánh giá</p>
-                    <input type="radio" name="TangDan"></input>
-                    <label for="TangDan">Tăng dần</label>
-                    <input type="radio" name="GiamDan"></input>
-                    <label for="GiamDan">Giảm dần</label>
-                </div>
-            </div>
-            
+                </div>     
         </div>
         <div class="col-9">
-            <div class="my_productlist d-flex flex-wrap">
-                <div class="my_productcard shadow">
+            <div class="my_productlist d-flex flex-wrap justify-content-end">
+                <div class="my_productcard shadow" data-url="/khachhang/sanpham/chitiet">
                     <div class="my_productspecial">Mới</div>
                     <div class="my_productimg">
                         <img src="/assets/images/sanpham1.jpg">

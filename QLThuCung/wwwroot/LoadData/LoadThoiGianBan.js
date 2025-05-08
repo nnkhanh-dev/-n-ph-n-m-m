@@ -12,7 +12,7 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response && response.data) {
                         hoaDonsData = response.data;
-                        disableBusyTimes(response.data);    
+                        disableBusyTimes(hoaDonsData);
                     } else {
                         console.error('Dữ liệu trả về không hợp lệ.');
                     }
@@ -24,6 +24,8 @@ $(document).ready(function () {
         } else {
             // Nếu ngày bị xóa thì enable lại tất cả option
             $("#ThoiGianChamSoc option").prop('disabled', false);
+            hoaDonsData = []; // Đặt lại hoaDonsData để tránh sử dụng dữ liệu cũ
+            updateEstimateTime(); // Cập nhật lại thời gian ước tính
         }
     });
 });
@@ -66,4 +68,39 @@ function disableBusyTimes(hoaDons) {
             }
         }
     });
+
+    // Lấy danh sách tất cả các option có thể chọn
+    const availableOptions = $('#ThoiGianChamSoc option').not(':disabled');
+    const notAvailableOptions = $('#ThoiGianChamSoc option:disabled');
+
+    // Sau khi disable các option, tiếp tục xử lý các option có thể chọn
+    availableOptions.each(function () {
+        const optionValue = parseInt($(this).val());  // Mốc thời gian của option
+
+        let nextBusyOption = null;
+        // Chỉ tìm nextBusyOption nếu có notAvailableOptions
+        if (notAvailableOptions.length > 0) {
+            notAvailableOptions.each(function () {
+                const val = parseInt($(this).val());
+                if (val > optionValue && (nextBusyOption === null || val < nextBusyOption)) {
+                    nextBusyOption = val;
+                }
+            });
+        }
+
+        // Chỉ thực hiện khi nextBusyOption có giá trị
+        if (nextBusyOption !== null && nextBusyOption - optionValue < totalTimeGlobal) {
+            $(this).prop('disabled', true);
+        }
+
+        if (optionValue + totalTimeGlobal > 1020 ) {
+            $(this).prop('disabled', true);
+        }
+
+        if (optionValue + totalTimeGlobal > 660 && optionValue < 660) {
+            $(this).prop('disabled', true);
+        }
+
+    });
+
 }

@@ -473,3 +473,62 @@ footer svg{
     border: 0px;
     padding: 16px;
 }
+
+.product-detailscard{
+    color: black;
+}
+
+.product-detailscard .card-title {
+    font-size: 30px;
+    color: #3c57d2;
+    font-weight: bold;
+}
+
+.product-detailscard svg {
+    width: 20px;
+    fill: orange;
+}
+
+.product-detailscard .price{
+    color: green;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.product-detailscard .discount-price{
+    color: gray;
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: line-through;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+.cart-item .card-title {
+    font-size: 25px;
+    color: #3c57d2;
+    font-weight: bold;
+    margin-top: 32px;
+}
+
+.cart-item .price {
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.my-card{
+    width: 800px;
+}
+
+.my-card .card-header{
+    border-radius: 0px;
+    background-color: #3c57d2;
+    color: white;
+}
+
+.my-card .card-footer {
+    border-radius: 0px;
+    background-color: white;
+    color: black;
+}

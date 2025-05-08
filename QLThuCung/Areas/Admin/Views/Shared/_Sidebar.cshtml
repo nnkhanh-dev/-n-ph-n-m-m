@@ -1,7 +1,7 @@
 ﻿<div class="sidebar bg-dark text-white p-3" style="min-height: 100vh;">
     <ul class="nav flex-column sidebar-menu">
         <li class="nav-item">
-            <a class="nav-link text-white" href="/Admin/Settings">Quản lý nhân viên</a>
+            <a class="nav-link text-white" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="/Admin/Settings">Quản lý khách hàng</a>
@@ -9,16 +9,16 @@
 
         <li class="nav-item has-submenu">
             <a href="#" class="nav-link text-white toggle-submenu d-flex justify-content-between align-items-center">
-                Cài đặt
+                Quản lý nhân sự
                 <span class="arrow-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5l0 1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3l0-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM310.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                        <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
                     </svg>
                 </span>
             </a>
             <ul class="submenu nav flex-column">
-                <li class="nav-item"><a href="/Admin/Products" class="nav-link text-white">Cài đặt 1</a></li>
-                <li class="nav-item"><a href="/Admin/Products/Create" class="nav-link text-white">Cài đặt 2</a></li>
+                <li class="nav-item"><a href="/admin/nhanvien" class="nav-link text-white">Nhân viên</a></li>
+                <li class="nav-item"><a href="/Admin/Products/Create" class="nav-link text-white">Kỹ thuật viên</a></li>
             </ul>
         </li>
 
@@ -27,6 +27,10 @@
 </div>
 
 <style>
+    .sidebar{
+        height:100%;
+    }
+
     .submenu {
         max-height: 0;
         overflow: hidden;
@@ -36,7 +40,7 @@
     }
 
         .submenu.show {
-            max-height: 500px; /* đủ lớn để chứa nội dung */
+            max-height: 100%; /* đủ lớn để chứa nội dung */
             opacity: 1;
         }
 

@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿let totalTimeGlobal = 0;
+
+$(document).ready(function () {
     LoadCBDichVu();
 
     // Lắng nghe sự thay đổi combobox thú cưng
@@ -54,6 +56,8 @@ function updateEstimateTime() {
         totalTime += time;
     });
 
+    totalTimeGlobal = totalTime;
+
     // Hiển thị thời gian ước tính
     $('#EstimateTime').text('Thời gian ước tính: ' + totalTime + ' phút');
 
@@ -68,22 +72,35 @@ function updateEstimateTime() {
     // Lấy danh sách tất cả các option có thể chọn
     const availableOptions = $('#ThoiGianChamSoc option').not(':disabled');
 
+    const notAvailableOptions = $('#ThoiGianChamSoc option:disabled');
+
+
     // Sau khi disable các option, tiếp tục xử lý các option có thể chọn
     availableOptions.each(function () {
         const optionValue = parseInt($(this).val());  // Mốc thời gian của option
-        const nextOption = $(this).next('option'); // Option tiếp theo
 
-        // Nếu có option tiếp theo, tính xem thời gian từ mốc hiện tại đến mốc tiếp theo có đủ cho dịch vụ không
-        if (nextOption.length) {
-            const nextOptionValue = parseInt(nextOption.val());
-            const timeDifference = nextOptionValue - optionValue;
+        let nextBusyOption = null;
+        // Chỉ tìm nextBusyOption nếu có notAvailableOptions
+        if (notAvailableOptions.length > 0) {
+            notAvailableOptions.each(function () {
+                const val = parseInt($(this).val());
+                if (val > optionValue && (nextBusyOption === null || val < nextBusyOption)) {
+                    nextBusyOption = val;
+                }
+            });
+        }
 
-            // Nếu thời gian không đủ cho dịch vụ, disable option
-            if (timeDifference <= totalTime) {
-                $(this).prop('disabled', true);
-            } else {
-                $(this).prop('disabled', false);
-            }
+        // Chỉ thực hiện khi nextBusyOption có giá trị
+        if (nextBusyOption !== null && nextBusyOption - optionValue < totalTimeGlobal) {
+            $(this).prop('disabled', true);
+        }
+
+        if (optionValue + totalTime > 1020) {
+            $(this).prop('disabled', true);
+        }
+
+        if (optionValue + totalTime > 660 && optionValue < 660) {
+            $(this).prop('disabled', true);
         }
     });
 }

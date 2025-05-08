@@ -21,6 +21,18 @@ namespace QLThuCung.Customer.Controllers
             return View();
         }
 
+        [Route("/khachhang/chungtoi")]
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        [Route("/khachhang/lienhe")]
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

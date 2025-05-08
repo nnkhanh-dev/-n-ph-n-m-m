@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Areas.Customer.Services;
 using QLThuCung.Data;
 using QLThuCung.Models;
@@ -16,6 +17,7 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 builder.Services.AddScoped<IDichVuKHService, ItemDichVuKHService>();
 builder.Services.AddScoped<IThuCungKHService, ItemThuCungKHService>();
 builder.Services.AddScoped<IHoaDonDVKHService, ItemHoaDonDVKHService>();
+builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("Default");

@@ -101,7 +101,20 @@ namespace QLThuCung.Controllers
                 await _userManager.AddToRoleAsync(user, "KhachHang");
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home", new { area = "KhachHang" });
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Admin"))
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+
+                if (roles.Contains("NhanVien"))
+                    return RedirectToAction("Index", "Home", new { area = "Employee" });
+
+                if (roles.Contains("KyThuatVien"))
+                    return RedirectToAction("Index", "Home", new { area = "Teachnician" });
+
+                if (roles.Contains("KhachHang"))
+                    return RedirectToAction("Index", "Home", new { area = "Customer" });
+
+                return RedirectToAction("Index", "Home");
             }
 
             foreach (var error in result.Errors)

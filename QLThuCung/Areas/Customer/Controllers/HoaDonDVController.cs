@@ -18,7 +18,7 @@ namespace QLThuCung.Areas.Customer.Controllers
             _userManager = userManager;
             _hoaDon = hoaDon;
         }
-         
+        [Route("khachhang/hoadondichvu")]
         public IActionResult Index()
         {
             return View();

@@ -5,15 +5,10 @@ namespace QLThuCung.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [Authorize(Roles = "KhachHang")]
-    public class SanPhamController : Controller
+    public class AccountController : Controller
     {
-        [Route("khachhang/sanpham")]
+        [Route("/khachhang/taikhoan")]
         public IActionResult Index()
-        {
-            return View();
-        }
-        [Route("/khachhang/sanpham/chitiet")]
-        public IActionResult Details()
         {
             return View();
         }
