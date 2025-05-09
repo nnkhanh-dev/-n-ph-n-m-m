@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HotelApp.Areas.Client.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Areas.Customer.Services;
@@ -18,7 +19,7 @@ builder.Services.AddScoped<IDichVuKHService, ItemDichVuKHService>();
 builder.Services.AddScoped<IThuCungKHService, ItemThuCungKHService>();
 builder.Services.AddScoped<IHoaDonDVKHService, ItemHoaDonDVKHService>();
 builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
-
+builder.Services.AddScoped<IVNPayService, VNPayService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.

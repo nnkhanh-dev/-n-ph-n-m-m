@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Customer\ViewModels\" />
     <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
 

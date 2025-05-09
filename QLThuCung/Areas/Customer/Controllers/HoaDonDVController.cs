@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HotelApp.Areas.Client.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QLThuCung.Areas.Customer.Services;
@@ -12,11 +13,13 @@ namespace QLThuCung.Areas.Customer.Controllers
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IHoaDonDVKHService _hoaDon;
+        private readonly IVNPayService _vnpayService;
 
-        public HoaDonDVController(UserManager<NguoiDung> userManager, IHoaDonDVKHService hoaDon)
+        public HoaDonDVController(UserManager<NguoiDung> userManager, IHoaDonDVKHService hoaDon, IVNPayService vnpayService)
         {
             _userManager = userManager;
             _hoaDon = hoaDon;
+            _vnpayService = vnpayService;
         }
         [Route("khachhang/hoadondichvu")]
         public IActionResult Index()
@@ -51,8 +54,17 @@ namespace QLThuCung.Areas.Customer.Controllers
                 return View();
             }
 
-            TempData["Success"] = "Đặt lịch thành công!";
-            return RedirectToAction("Index", "DichVu");
+            if(model.PhuongThucThanhToan == 1)
+            {
+                decimal total = await _hoaDon.TotalPrice(model);
+                string note = "abc";
+                return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, total, note));
+            }
+            else
+            {
+                TempData["Success"] = "Đặt lịch thành công!";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [Route("khachhang/datlich/listbydate/{ngayChamSoc}")]
