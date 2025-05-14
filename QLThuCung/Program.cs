@@ -24,6 +24,7 @@ builder.Services.AddScoped<IDanhMucService, ItemDanhMucService>();
 builder.Services.AddScoped<ISanPhamKHService, ItemSanPhamKHService>();
 builder.Services.AddScoped<IGioHangKHService, ItemGioHangKHService>();
 builder.Services.AddScoped<IHoaDonSPKHService, ItemHoaDonSPKHService>();
+builder.Services.AddScoped<IThongKeService, ItemThongKeService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.

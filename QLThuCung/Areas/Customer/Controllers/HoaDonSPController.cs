@@ -104,6 +104,7 @@ namespace QLThuCung.Areas.Customer.Controllers
             {
                 model.MaThanhToan = model.NguoiTao + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
             }
+            model.NgayTao = DateTime.Now;
             var result = await _hoaDon.Create(model);
             if (!result)
             {

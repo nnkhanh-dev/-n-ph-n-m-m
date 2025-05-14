@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QLThuCung.Admin.Models;
+using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Data;
 using QLThuCung.Models;
 
@@ -17,12 +18,14 @@ namespace QLThuCung.Admin.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IThongKeService _thongKe;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context, UserManager<NguoiDung> userManager)
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, UserManager<NguoiDung> userManager, IThongKeService thongKe)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _thongKe = thongKe;
         }
         [Route("/admin/")]
         public async Task<IActionResult> Index()
@@ -41,6 +44,12 @@ namespace QLThuCung.Admin.Controllers
             ViewBag.SoLuongKyThuatVien = kyThuatVienList.Count;
 
             return View();
+        }
+        [Route("/admin/doanhthu")]
+        public async Task<IActionResult> DoanhThu()
+        {
+            var doanhThu = await _thongKe.DoanhThu();
+            return Json(new { Data = doanhThu });
         }
 
         public IActionResult Privacy()

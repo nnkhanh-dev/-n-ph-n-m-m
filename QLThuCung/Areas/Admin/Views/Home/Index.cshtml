@@ -49,4 +49,219 @@
             </div>
         </div>
     </div>
+    <div class="container pt-5">
+        <div class="card shadow p-5">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3" style="border-bottom: 3px solid #3c57d2;">
+                <div>
+                    <h2 style="color:#3c57d2;"><strong>DOANH THU</strong></h2>
+                </div>
+                <button class="btn btn-primary">Xuất báo cáo</button>
+            </div>
+            <div class="filter-container card shadow d-flex flex-row justify-content-center mb-5 py-3">
+                <div class="mx-3">
+                    <label for="yearFilter" style="color:#3c57d2;"><strong>Năm:</strong></label>
+                    <select class="form-control" style="width: 150px;" id="yearFilter">
+                        <option value="all">Tất cả</option>
+                    </select>
+                </div>
+                <div class="mx-3">
+                    <label for="quarterFilter" style="color:#3c57d2;"><strong>Quý:</strong></label>
+                    <select class="form-control" style="width: 150px;" id="quarterFilter">
+                        <option value="all">Tất cả</option>
+                        <option value="1">Quý 1</option>
+                        <option value="2">Quý 2</option>
+                        <option value="3">Quý 3</option>
+                        <option value="4">Quý 4</option>
+                    </select>
+                </div>
+                <div class="mx-3">
+                    <label for="monthFilter" style="color:#3c57d2;"><strong>Tháng:</strong></label>
+                    <select class="form-control" style="width: 150px;" id="monthFilter">
+                        <option value="all">Tất cả</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+                <div class="mx-3">
+                    <label for="typeFilter" style="color:#3c57d2;"><strong>Loại:</strong></label>
+                    <select class="form-control" style="width: 150px;" id="typeFilter">
+                        <option value="all">Tất cả</option>
+                        <option value="Dịch vụ">Dịch vụ</option>
+                        <option value="Sản phẩm">Sản phẩm</option>
+                    </select>
+                </div>
+                <div class="mx-3">
+                    <label for="groupBy" style="color:#3c57d2;"><strong>Nhóm theo:</strong></label>
+                    <select class="form-control" style="width: 150px;" id="groupBy">
+                        <option value="month">Tháng</option>
+                        <option value="quarter">Quý</option>
+                    </select>
+                </div>
+            </div>
+            <canvas id="myChart" class="w-100"></canvas>
+        </div>
+        
+    </div>
 </div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            let rawData = [];
+            let myChart;
+
+            // Kiểm tra Chart.js đã load chưa
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js failed to load.');
+                document.getElementById('error').textContent = 'Không thể tải Chart.js. Vui lòng kiểm tra kết nối.';
+                return;
+            }
+
+            // Khởi tạo biểu đồ trống
+            const ctx = document.getElementById('myChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Doanh Thu Stacked Bar Chart'
+                        }
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Thời gian'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Doanh Thu (VNĐ)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gắn sự kiện onchange bằng jQuery (đảm bảo function đã tồn tại)
+            $('#yearFilter, #quarterFilter, #monthFilter, #typeFilter, #groupBy').on('change', updateChart);
+
+            // Gọi API để lấy dữ liệu
+            function fetchData() {
+                $.ajax({
+                    url: 'https://localhost:7239/admin/doanhthu',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (json) {
+                        console.log('Dữ liệu từ API:', json);
+
+                        // Gán đúng dữ liệu từ json.data
+                        rawData = Array.isArray(json.data) ? json.data : [];
+
+                        // Gọi sau khi có dữ liệu
+                        populateYearFilter(); // cập nhật năm trong filter
+                        updateChart();        // cập nhật biểu đồ ngay khi trang load xong
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Lỗi API:', error);
+                        document.getElementById('error').textContent = 'Không thể tải dữ liệu từ API.';
+                    }
+                });
+            }
+
+            // Đổ năm vào dropdown
+            function populateYearFilter() {
+                const yearFilter = document.getElementById('yearFilter');
+                yearFilter.innerHTML = '<option value="all">Tất cả</option>';
+                const years = [...new Set(rawData.map(item => item.nam))].sort((a, b) => a - b);
+                years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearFilter.appendChild(option);
+                });
+                yearFilter.value = 'all';
+            }
+
+            // Cập nhật biểu đồ
+            function updateChart() {
+                const year = $('#yearFilter').val();
+                const quarter = $('#quarterFilter').val();
+                const month = $('#monthFilter').val();
+                const type = $('#typeFilter').val();
+                const groupBy = $('#groupBy').val();
+
+                let filteredData = rawData;
+
+                if (year !== 'all') filteredData = filteredData.filter(item => item.nam === parseInt(year));
+                if (quarter !== 'all') filteredData = filteredData.filter(item => item.quy === parseInt(quarter));
+                if (month !== 'all') filteredData = filteredData.filter(item => item.thang === parseInt(month));
+                if (type !== 'all') filteredData = filteredData.filter(item => item.loai === type);
+
+                const groupedData = filteredData.reduce((acc, item) => {
+                    const key = groupBy === 'month'
+                        ? `${item.nam}-${item.thang.toString().padStart(2, '0')}`
+                        : `${item.nam}-Q${item.quy}`;
+                    if (!acc[key]) acc[key] = { 'Dịch vụ': 0, 'Sản phẩm': 0 };
+                    acc[key][item.loai] += item.doanhThu;
+                    return acc;
+                }, {});
+
+                const labels = Object.keys(groupedData).sort();
+                const dichVuData = labels.map(key => groupedData[key]['Dịch vụ'] || 0);
+                const sanPhamData = labels.map(key => groupedData[key]['Sản phẩm'] || 0);
+
+                myChart.data.labels = labels.map(label =>
+                    groupBy === 'month'
+                        ? `Tháng ${label.split('-')[1]} ${label.split('-')[0]}`
+                        : `Quý ${label.split('-Q')[1]} ${label.split('-Q')[0]}`
+                );
+
+                myChart.data.datasets = [
+                    {
+                        label: 'Dịch vụ',
+                        data: dichVuData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Sản phẩm',
+                        data: sanPhamData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ];
+
+                myChart.update();
+            }
+
+            // Bắt đầu
+            fetchData();
+        });
+    </script>
+
+
+}
