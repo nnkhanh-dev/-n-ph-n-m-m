@@ -22,7 +22,7 @@ builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure()));
 builder.Services.AddIdentity<NguoiDung, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
