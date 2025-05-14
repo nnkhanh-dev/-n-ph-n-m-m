@@ -31,6 +31,7 @@ namespace QLThuCung.Models
         [Required]
         public string NguoiTao { get; set; }
         public string? NguoiCapNhat { get; set; }
+        public string? MaThanhToan { get; set;}
         [ValidateNever]
         public DipDacBiet DipDacBiet { get; set;}
         [ValidateNever]

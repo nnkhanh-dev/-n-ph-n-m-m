@@ -1,6 +1,6 @@
 namespace QLThuCung.Customer.Models
 {
-    public class ErrorViewModel
+    public class ErrorViewModelCustomer
     {
         public string? RequestId { get; set; }
 

@@ -38,7 +38,7 @@
                                                 <div class="mb-3"><strong>@item.SanPham.Ten</strong></div>
                                                 <div class="d-flex justify-content-between pe-5">
                                                     <div><strong>Số lượng:</strong> @item.SoLuong</div>
-                                                    <div class="text-success"><strong>@item.DonGia.ToString("N0") VNĐ</strong></div>
+                                                    <strong class="text-success">@(((decimal)item.DonGia * item.SoLuong).ToString("N0")) VNĐ</strong>
                                                 </div>
                                             </div>
 
@@ -46,7 +46,7 @@
                                     </div>
 
                                 </div>
-                                total += item.DonGia;
+                                total += (item.DonGia * item.SoLuong);
                             }
                         </div>
                         <div class="p-3 w-100 text-end">

@@ -187,11 +187,13 @@
                     DonGia: parseFloat($('#giaSanPham').text().replace(' VNĐ', '').replace(/,/g, '')) // Lấy giá sản phẩm
                 };
 
+                var chiTietList = [chiTietHoaDon];
+
                 $.ajax({
                     url: '/khachhang/hoadonsanpham/muangay',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(chiTietHoaDon),
+                    data: JSON.stringify(chiTietList),
                     success: function (response) {
                         if (response.success) {
                             toastr.success(response.message);

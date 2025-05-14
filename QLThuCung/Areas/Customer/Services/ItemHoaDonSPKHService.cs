@@ -56,6 +56,31 @@ namespace QLThuCung.Areas.Customer.Services
                         await transaction.RollbackAsync();
                         return false;
                     }
+                    if(model.PhuongThucThanhToan == 0)
+                    {
+                        foreach (var item in chiTiet)
+                        {
+                            var sanpham = await _context.SanPham.FindAsync(item.IdSanPham);
+                            if (sanpham == null)
+                            {
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+                            if (sanpham.SoLuong < item.SoLuong)
+                            {
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+                            sanpham.SoLuong = sanpham.SoLuong - item.SoLuong;
+                            _context.SanPham.Update(sanpham);
+                            int sanPhamResult = await _context.SaveChangesAsync();
+                            if (sanPhamResult == 0)
+                            {
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+                        }
+                    }
 
                     await transaction.CommitAsync();
                     return true;

@@ -36,8 +36,10 @@ namespace QLThuCung.Areas.Customer.Services
                     NgayChamSoc = model.NgayChamSoc,
                     ThoiGianChamSoc = model.ThoiGianChamSoc,
                     NgayTao = DateTime.Now,
-                    NguoiTao = model.NguoiTao
+                    NguoiTao = model.NguoiTao,
+                    MaThanhToan = model.MaThanhToan
                 };
+
                 _context.HoaDonDichVu.Add(hoaDon);
                 var hoaDonResult = await _context.SaveChangesAsync() > 0;
                 if (!hoaDonResult)

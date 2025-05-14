@@ -36,7 +36,7 @@ namespace QLThuCung.Areas.Customer.Controllers
 
         [Route("khachhang/hoadonsanpham/muangay")]
         [HttpPost]
-        public async Task<IActionResult> BuyNow([FromBody] ChiTietHoaDonSanPham chiTiet)
+        public async Task<IActionResult> BuyNow([FromBody] List<ChiTietHoaDonSanPham> chiTiets)
         {
             try
             {
@@ -49,18 +49,19 @@ namespace QLThuCung.Areas.Customer.Controllers
                     PhuongThucThanhToan = 0, // Default payment method, adjust as needed
                     NgayTao = DateTime.Now,
                     NguoiTao = user.Id,
-                    ChiTietHoaDonSanPham = new List<ChiTietHoaDonSanPham>
-                    {
-                        new ChiTietHoaDonSanPham
-                        {
-                            IdHoaDon = 0,
-                            IdSanPham = chiTiet.IdSanPham,
-                            SoLuong = chiTiet.SoLuong,
-                            DonGia = chiTiet.DonGia
-                        }
-                    },
+                    ChiTietHoaDonSanPham = new List<ChiTietHoaDonSanPham>(),
                     DanhGia = new List<DanhGiaSP>()
                 };
+
+                foreach(var item in chiTiets)
+                {
+                    var chiTiet = new ChiTietHoaDonSanPham();
+                    chiTiet.IdHoaDon = 0;
+                    chiTiet.IdSanPham = item.IdSanPham;
+                    chiTiet.SoLuong = item.SoLuong;
+                    chiTiet.DonGia = item.DonGia;
+                    hoaDon.ChiTietHoaDonSanPham.Add(chiTiet);
+                }
 
                 // Store HoaDonSanPham in session
                 HttpContext.Session.SetString("PendingHoaDon", JsonSerializer.Serialize(hoaDon));
@@ -99,20 +100,25 @@ namespace QLThuCung.Areas.Customer.Controllers
                 TempData["Error"] = "Dữ liệu không hợp lệ!";
                 return View(model);
             }
+            if (model.PhuongThucThanhToan == 1)
+            {
+                model.MaThanhToan = model.NguoiTao + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
+            }
             var result = await _hoaDon.Create(model);
             if (!result)
             {
                 TempData["Error"] = "Đặt mua thất bại!";
                 return View(model);
             }
+            HttpContext.Session.Remove("PendingHoaDon");
             if (model.PhuongThucThanhToan == 1)
             {
                 decimal total = 0;
                 foreach(var item in model.ChiTietHoaDonSanPham)
                 {
-                    total += item.DonGia;
+                    total += item.DonGia * item.SoLuong;
                 }
-                string note = "abc";
+                string note = model.MaThanhToan;
                 return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, total, note));
             }
             else

@@ -45,7 +45,10 @@ namespace QLThuCung.Areas.Customer.Controllers
                 TempData["error"] = "Dữ liệu không hợp lệ!";
                 return View();
             }
-
+            if(model.PhuongThucThanhToan == 1)
+            {
+                model.MaThanhToan = model.NguoiTao + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
+            }
             var result = await _hoaDon.Create(model);
 
             if (!result)
@@ -57,7 +60,7 @@ namespace QLThuCung.Areas.Customer.Controllers
             if(model.PhuongThucThanhToan == 1)
             {
                 decimal total = await _hoaDon.TotalPrice(model);
-                string note = "abc";
+                string note = model.MaThanhToan;
                 return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, total, note));
             }
             else
