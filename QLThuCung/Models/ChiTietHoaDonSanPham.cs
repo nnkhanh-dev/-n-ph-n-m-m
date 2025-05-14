@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLThuCung.Models
@@ -14,7 +15,9 @@ namespace QLThuCung.Models
         [Column(TypeName = "decimal(18,2)")]
         [Range(0, double.MaxValue)]
         public decimal DonGia { get; set; }
+        [ValidateNever]
         public HoaDonSanPham HoaDon { get; set; }
+        [ValidateNever]
         public SanPham SanPham { get; set; }
     }
 }

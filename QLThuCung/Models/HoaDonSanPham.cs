@@ -1,4 +1,5 @@
-﻿using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,9 +23,12 @@ namespace QLThuCung.Models
         [Required]
         public string NguoiTao { get; set; }
         public string? NguoiCapNhat { get; set; }
+        [ValidateNever]
         public NguoiDung KhachHang { get; set; }
+        [ValidateNever]
         public PhieuGiamGia PhieuGiamGia { get; set ; }
         public ICollection<ChiTietHoaDonSanPham> ChiTietHoaDonSanPham { get; set; }
+        public ICollection<DanhGiaSP> DanhGia { get; set; }
 
     }
 }

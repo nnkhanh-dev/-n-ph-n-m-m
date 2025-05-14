@@ -1,90 +1,210 @@
-﻿<div class="container">
+﻿@model QLThuCung.Models.SanPham
+
+@{
+    var i = 0;
+    var isFirst = "";
+    var star = 0.0;
+    var sales = 0;
+    var comment = 0;
+
+    var danhGias = Model.ChiTietHoaDonSanPham
+                           .SelectMany(ct => ct.HoaDon?.DanhGia ?? new List<DanhGiaSP>())
+                           .ToList();
+
+    foreach(var item in Model.ChiTietHoaDonSanPham)
+    {
+        sales += item.SoLuong;
+    }
+
+    star = danhGias.Any() ? danhGias.Average(dg => dg.Sao) : 0;
+    comment = danhGias.Count();
+}
+
+<div class="container">
     <div class="mt-5 pt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/khach-hang">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="/khach-hang/sanpham">Cửa hàng</a></li>
+                <li class="breadcrumb-item"><a href="/khachhang/sanpham">Cửa hàng</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm</li>
             </ol>
         </nav>
     </div>
     <div class="product-detailscard card m-5">
-        <div class="row">
-            <div class="col-6">
-                <div class="product-carousel">
-                    <div id="carouselExampleIndicators" class="carousel slide">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+       <div class="card-header">
+           <h3>Thông tin sản phẩm</h3>
+       </div>
+       <div class="card-body p-5">
+            <div class="row">
+                <div class="col-6">
+                    <div class="product-carousel">
+                        <div id="carouselExampleIndicators" class="carousel slide">
+                            <div class="carousel-indicators">
+                                @{
+                                    i = 0;
+
+                                    foreach (var item in Model.AnhSanPham)
+                                    {
+                                        @if (i == 0)
+                                        {
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="active" aria-current="true" aria-label="Slide @(i+1)"></button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" aria-label="Slide @(i+1)"></button>
+                                        }
+                                        i++;
+                                    }
+                                }
+                            </div>
+                            <div class="carousel-inner">
+                                @{
+                                    i = 0;
+                                    foreach (var item in Model.AnhSanPham)
+                                    {
+                                        isFirst = i == 0 ? "active" : " ";
+                                        <div class="carousel-item @isFirst">
+                                            <img src="@item.DuongDan" class="d-block w-100" alt="Ảnh sản phẩm">
+                                        </div>
+                                        i++;
+                                    }
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="/assets/images/sanpham1.jpg" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="my_productcontent">
+                        <p class="card-title">@Model.Ten</p>
+                        <p><strong>Danh mục:</strong> @Model.DanhMuc.Ten</p>
+                        <p>@Model.MoTa</p>
+                        <div class="d-flex">
+                            <div class="mb-3">
+                                <strong>@star</strong>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                </svg>
                             </div>
-                            <div class="carousel-item">
-                                <img src="/assets/images/sanpham1.jpg" class="d-block w-100" alt="...">
+                            <span class="mx-2">|</span>
+                            <div>
+                                <strong>@comment</strong> đánh giá
                             </div>
-                            <div class="carousel-item">
-                                <img src="/assets/images/sanpham1.jpg" class="d-block w-100" alt="...">
+                            <span class="mx-2">|</span>
+                            <div>
+                                <strong>@sales</strong> lượt bán
                             </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                        @{
+                            if (Model.GiamGia != null && Model.GiamGia > 0)
+                            {
+                                <p class="discount-price">@Model.Gia.ToString("N0") VNĐ</p>
+                                <p class="price" id="giaSanPham">@(((decimal)(Model.Gia - (Model.GiamGia / 100.0m) * Model.Gia)).ToString("N0")) VNĐ</p>
+                            }
+                            else
+                            {
+                                <p class="price" id="giaSanPham">@Model.Gia.ToString("N0") VNĐ</p>
+                            }
+                        }
+
+                        <p class="mt-3">Số lượng</p>
+                        <div class="quantity-selector d-flex align-items-center">
+                            <button type="button" class="btn btn-secondary" class="me-3" onclick="decreaseQuantity()">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                    <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                </svg>
+                            </button>
+                            <input type="number" id="quantity" value="1" min="1" max="2370965" />
+                            <button type="button" class="btn btn-secondary" class="me-3" onclick="increaseQuantity()">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p>@Model.SoLuong Sản phẩm có sẵn</p>
+                        <div>
+                            <button href="#" id="themVaoGioHang" class="btn btn-warning text-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                    <path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                                </svg>
+                                Thêm vào giỏ hàng
+                            </button>
+                            <button id="muaNgay" href="#" class="btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                </svg>
+                                Mua ngay
+                            </button>
+                        </div>
+                        <input type="hidden" id="idSanPham" value="@Model.Id"></input>
                     </div>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="my_productcontent">
-                    <p class="card-title">Hạt dinh dưỡng ZoiDog</p>
-                    <p><strong>Danh mục:</strong> Thức ăn cho chó</p>
-                    <p>Thức ăn hạt cho chó trưởng thành hạt Zoi Dog Food có thương hiệu từ Thái Lan nổi tiếng về chất lượng, mang đến cho thú cưng nhà bạn một bữa ngon lành.</p>
-                    <div>
-                        <strong>4.9</strong>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <strong>5.8k</strong> đánh giá
-                    </div>
-                    <div>
-                        <strong>27.6k</strong> lượt bán
-                    </div>
-                    <p class="discount-price">30000VNĐ</p>
-                    <p class="price">25000VNĐ</p>
-                    <p>Số lượng</p>
-                    <div class="quantity-selector">
-                        <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
-                        <input type="number" id="quantity" value="1" min="1" max="2370965" style="width: 60px; padding:5px; text-align: center;"/>
-                        <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
-                    </div>
-                    <p>2370965 Sản phẩm có sẵn</p>
-                    <div>
-                        <a href="#" class="btn btn-warning text-light">Thêm vào giỏ hàng</a>
-                        <a href="#" class="btn btn-success">Mua ngay</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+       </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#themVaoGioHang").click(function () {
+                var chiTietGioHang = {
+                    IdSanPham: parseInt($('#idSanPham').val()),
+                    SoLuong: parseInt($('#quantity').val()),
+                    IdGioHang: 'temp'
+                };
+
+                $.ajax({
+                    url: '/khachhang/giohang/taomoi',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(chiTietGioHang),
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error('Đã có lỗi xảy ra, vui lòng thử lại !');
+                    }
+                });
+            });
+        });
+
+        $("#muaNgay").click(function () {
+                var chiTietHoaDon = {
+                    IdSanPham: parseInt($('#idSanPham').val()),
+                    SoLuong: parseInt($('#quantity').val()),
+                    DonGia: parseFloat($('#giaSanPham').text().replace(' VNĐ', '').replace(/,/g, '')) // Lấy giá sản phẩm
+                };
+
+                $.ajax({
+                    url: '/khachhang/hoadonsanpham/muangay',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(chiTietHoaDon),
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            // Chuyển hướng đến trang tạo hóa đơn
+                            window.location.href = '/khachhang/hoadonsanpham/taomoi';
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error('Đã có lỗi xảy ra, vui lòng thử lại!');
+                    }
+                });
+            });
+    </script>
+}

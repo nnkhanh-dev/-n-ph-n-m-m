@@ -20,6 +20,10 @@ builder.Services.AddScoped<IThuCungKHService, ItemThuCungKHService>();
 builder.Services.AddScoped<IHoaDonDVKHService, ItemHoaDonDVKHService>();
 builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
 builder.Services.AddScoped<IVNPayService, VNPayService>();
+builder.Services.AddScoped<IDanhMucService, ItemDanhMucService>();
+builder.Services.AddScoped<ISanPhamKHService, ItemSanPhamKHService>();
+builder.Services.AddScoped<IGioHangKHService, ItemGioHangKHService>();
+builder.Services.AddScoped<IHoaDonSPKHService, ItemHoaDonSPKHService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.
@@ -37,8 +41,20 @@ builder.Services.AddIdentity<NguoiDung, IdentityRole>(options =>
 .AddDefaultTokenProviders()
 .AddDefaultUI();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 
 var app = builder.Build();
+
+app.UseSession();
 
 
 // Seed roles here
