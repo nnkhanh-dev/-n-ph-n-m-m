@@ -115,7 +115,10 @@ namespace QLThuCung.Areas.Customer.Services
 
         public async Task<IEnumerable<ThuCung>> List(string id)
         {
-            var list = await _context.ThuCung.Where(x => x.IdKhachHang == id).ToListAsync();
+            var list = await _context.ThuCung.Where(x => x.IdKhachHang == id)
+                                             .Include(x => x.Giong)
+                                             .ThenInclude(x => x.Loai)
+                                             .ToListAsync();
             return list;
         }
     }
