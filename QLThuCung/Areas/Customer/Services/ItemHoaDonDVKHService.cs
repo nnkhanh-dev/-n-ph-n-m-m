@@ -110,6 +110,7 @@ namespace QLThuCung.Areas.Customer.Services
                                                     .Include(x => x.ThuCung)
                                                     .Include(x => x.DanhGia )
                                                         .ThenInclude(x => x.TepDinhKem)
+                                                    .Include(x => x.Giuong)
                                                     .FirstOrDefaultAsync(x => x.Id == id);
             return hoaDon;
         }
@@ -129,7 +130,7 @@ namespace QLThuCung.Areas.Customer.Services
         {
             var list = await _context.HoaDonDichVu.Include(x => x.ChiTietHoaDonDichVu)
                                                   .ThenInclude(x => x.DichVu)
-                                                  .Where(x => x.NgayChamSoc == NgayChamSoc)
+                                                  .Where(x => x.NgayChamSoc == NgayChamSoc && x.TrangThai != -1 && x.TrangThai != -100)
                                                   .ToListAsync();
             return list;
         }

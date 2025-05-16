@@ -102,7 +102,7 @@ namespace QLThuCung.Areas.Customer.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Dữ liệu không hợp lệ!";
-                return View(model);
+                return RedirectToAction("Index", "SanPham");
             }
             if (model.PhuongThucThanhToan == 1)
             {
@@ -113,7 +113,7 @@ namespace QLThuCung.Areas.Customer.Controllers
             if (!result)
             {
                 TempData["Error"] = "Đặt mua thất bại!";
-                return View(model);
+                return RedirectToAction("Index", "SanPham");
             }
             HttpContext.Session.Remove("PendingHoaDon");
             if (model.PhuongThucThanhToan == 1)

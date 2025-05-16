@@ -29,6 +29,7 @@
                 <div><strong>Thời gian chăm sóc: </strong>@gio giờ @phut phút</div>
                 <div><strong>Bắt đầu: </strong>@Model.BatDau?.ToString("dd/MM/yyyy HH:mm")</div>
                 <div><strong>Kết thúc: </strong>@Model.KetThuc?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Giường: </strong>@Model.Giuong?.MaGiuong</div>
                 <div><strong>Phương thức thanh toán: </strong>@{var PTTT = Model.PhuongThucThanhToan == 0 ? "Trả sau" : "VNPAY";} @PTTT</div>
                 @{
                     string trangThaiText;

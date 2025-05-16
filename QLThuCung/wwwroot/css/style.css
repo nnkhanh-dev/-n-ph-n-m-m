@@ -56,6 +56,7 @@
 
 .my_productcard{
     width: 250px;
+    height: 550px;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -132,6 +133,7 @@
 
 .my_productlist{
     display: flex;
+    min-height: 1200px;
 }
 
 .my_servicecard {
@@ -834,3 +836,54 @@ footer svg{
 .booking-card strong {
     color: #3c57d2;
 }
+
+.modal-dichvu table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.modal-dichvu th, td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.modal-dichvu th {
+    background-color: #3b5bfd; /* Màu xanh dương dịu */
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.modal-dichvu td {
+    background-color: #f9f9f9;
+    color: #3b5bfd;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-dichvu .price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #3b5bfd;
+}
+
+.modal-dichvu .carousel-inner {
+    max-height: 250px;
+    overflow: hidden;
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: center; */
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.modal-dichvu .carousel-inner img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }

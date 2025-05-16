@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,5 +42,9 @@ namespace QLThuCung.Models
         public ICollection<ChiTietHoaDonDichVu> ChiTietHoaDonDichVu { get; set; }
         [ValidateNever]
         public ICollection<DanhGiaDV> DanhGia { get; set; }
+        [ForeignKey(nameof(Giuong))]
+        public int? IdGiuong {  get; set; }
+        [ValidateNever]
+        public Giuong Giuong { get; set; }
     }
 }

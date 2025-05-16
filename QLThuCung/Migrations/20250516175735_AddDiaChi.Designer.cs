@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QLThuCung.Data;
 
@@ -11,9 +12,11 @@ using QLThuCung.Data;
 namespace QLThuCung.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516175735_AddDiaChi")]
+    partial class AddDiaChi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -530,26 +533,6 @@ namespace QLThuCung.Migrations
                     b.ToTable("Giong");
                 });
 
-            modelBuilder.Entity("QLThuCung.Models.Giuong", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("MaGiuong")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MoTa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Giuong");
-                });
-
             modelBuilder.Entity("QLThuCung.Models.HoaDonDichVu", b =>
                 {
                     b.Property<int>("Id")
@@ -562,9 +545,6 @@ namespace QLThuCung.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("IdDipDacBiet")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdGiuong")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdPhieuGiamGia")
@@ -607,8 +587,6 @@ namespace QLThuCung.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdDipDacBiet");
-
-                    b.HasIndex("IdGiuong");
 
                     b.HasIndex("IdPhieuGiamGia");
 
@@ -1301,10 +1279,6 @@ namespace QLThuCung.Migrations
                         .WithMany()
                         .HasForeignKey("IdDipDacBiet");
 
-                    b.HasOne("QLThuCung.Models.Giuong", "Giuong")
-                        .WithMany("HoaDon")
-                        .HasForeignKey("IdGiuong");
-
                     b.HasOne("QLThuCung.Models.PhieuGiamGia", "PhieuGiamGia")
                         .WithMany()
                         .HasForeignKey("IdPhieuGiamGia");
@@ -1316,8 +1290,6 @@ namespace QLThuCung.Migrations
                         .IsRequired();
 
                     b.Navigation("DipDacBiet");
-
-                    b.Navigation("Giuong");
 
                     b.Navigation("PhieuGiamGia");
 
@@ -1463,11 +1435,6 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.GioHang", b =>
                 {
                     b.Navigation("ChiTietGioHang");
-                });
-
-            modelBuilder.Entity("QLThuCung.Models.Giuong", b =>
-                {
-                    b.Navigation("HoaDon");
                 });
 
             modelBuilder.Entity("QLThuCung.Models.HoaDonDichVu", b =>

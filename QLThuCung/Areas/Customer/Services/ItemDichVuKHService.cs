@@ -38,6 +38,7 @@ namespace QLThuCung.Areas.Customer.Services
             var list = await _context.DichVu.Include(x => x.AnhDichVu)
                                             .Include(x => x.BangGiaDV)
                                                 .ThenInclude(x => x.ChiTietBangGiaDV)
+                                            .Where(x => x.TrangThai == 0)
                                             .ToListAsync();
             return list;
         }

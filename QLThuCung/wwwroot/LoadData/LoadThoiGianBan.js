@@ -32,48 +32,58 @@ $(document).ready(function () {
 });
 
 function disableBusyTimes(hoaDons) {
-    const soGiuong = 4;
+    $.ajax({
+        url: '/khachhang/giuong/list',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            const soGiuong = response.data.length;
 
-    $("#ThoiGianChamSoc option").prop('disabled', false);
+            $("#ThoiGianChamSoc option").prop('disabled', false);
 
-    let busyTimes = [];
+            let busyTimes = [];
 
-    hoaDons.forEach(function (hoaDon) {
-        let startMinutes = hoaDon.thoiGianChamSoc;
-        let totalServiceMinutes = 0;
+            hoaDons.forEach(function (hoaDon) {
+                let startMinutes = hoaDon.thoiGianChamSoc;
+                let totalServiceMinutes = 0;
 
-        if (hoaDon.chiTietHoaDonDichVu && hoaDon.chiTietHoaDonDichVu.length > 0) {
-            hoaDon.chiTietHoaDonDichVu.forEach(function (chiTiet) {
-                if (chiTiet.dichVu && chiTiet.dichVu.thoiGian) {
-                    totalServiceMinutes += chiTiet.dichVu.thoiGian;
+                if (hoaDon.chiTietHoaDonDichVu && hoaDon.chiTietHoaDonDichVu.length > 0) {
+                    hoaDon.chiTietHoaDonDichVu.forEach(function (chiTiet) {
+                        if (chiTiet.dichVu && chiTiet.dichVu.thoiGian) {
+                            totalServiceMinutes += chiTiet.dichVu.thoiGian;
+                        }
+                    });
+                }
+
+                let endMinutes = startMinutes + totalServiceMinutes;
+                busyTimes.push({ start: startMinutes, end: endMinutes });
+            });
+
+            $("#ThoiGianChamSoc option").each(function () {
+                let option = $(this);
+                let value = parseInt(option.val());
+
+                if (isNaN(value)) return;
+
+                let endEstimate = value + totalTimeGlobal;
+
+                // Đếm số ca đang bận trong khoảng này
+                let countBusy = 0;
+                for (let i = 0; i < busyTimes.length; i++) {
+                    let bt = busyTimes[i];
+                    if ((value < bt.end && endEstimate > bt.start)) {
+                        countBusy++;
+                    }
+                }
+
+                // Disable nếu số ca bận >= số giường
+                if (countBusy >= soGiuong || (value < 660 && endEstimate > 660) || endEstimate > 1020) {
+                    option.prop('disabled', true);
                 }
             });
-        }
-
-        let endMinutes = startMinutes + totalServiceMinutes;
-        busyTimes.push({ start: startMinutes, end: endMinutes });
-    });
-
-    $("#ThoiGianChamSoc option").each(function () {
-        let option = $(this);
-        let value = parseInt(option.val());
-
-        if (isNaN(value)) return;
-
-        let endEstimate = value + totalTimeGlobal;
-
-        // Đếm số ca đang bận trong khoảng này
-        let countBusy = 0;
-        for (let i = 0; i < busyTimes.length; i++) {
-            let bt = busyTimes[i];
-            if ((value < bt.end && endEstimate > bt.start)) {
-                countBusy++;
-            }
-        }
-
-        // Disable nếu số ca bận >= số giường
-        if (countBusy >= soGiuong || (value < 660 && endEstimate > 660) || endEstimate > 1020) {
-            option.prop('disabled', true);
+        },
+        error: function (xhr, status, error) {
+            console.error('Lỗi khi lấy dữ liệu giường:', error);
         }
     });
 }

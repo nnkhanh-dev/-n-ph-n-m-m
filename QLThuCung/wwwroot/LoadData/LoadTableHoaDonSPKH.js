@@ -61,7 +61,8 @@ function LoadTableHoaDonSanPham(id) {
 
                     return buttons;
                 },
-                width: '25%'
+                width: '25%',
+                className: 'text-start'
             }
         ]
     });

@@ -77,7 +77,8 @@ function LoadTableHoaDonDichVu(id) {
 
                     return buttons;
                 },
-                width: '20%'
+                width: '20%',
+                className: 'text-start'
             }
         ]
     });
