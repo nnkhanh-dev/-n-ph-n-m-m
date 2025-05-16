@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.ViewModels;
 using QLThuCung.Data;
+using QLThuCung.Models;
 
 namespace QLThuCung.Areas.Admin.Services
 {
@@ -66,6 +67,78 @@ namespace QLThuCung.Areas.Admin.Services
 
             return combinedList;
         }
+
+        public async Task<IEnumerable<DoanhThuSPVM>> DoanhThuSanPham()
+        {
+            var list = await _context.ChiTietHoaDonSanPham.Include(x => x.SanPham).ToListAsync();
+
+            var result = list
+                .GroupBy(x => x.IdSanPham)
+                .Select(group => new DoanhThuSPVM
+                {
+                    Id = group.Key,
+                    TenSanPham = group.First().SanPham?.Ten, 
+                    DoanhThu = group.Sum(x => x.SoLuong * x.DonGia)
+                }).ToList();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DoanhThuDVVM>> DoanhThuDichVu()
+        {
+            var list = await _context.ChiTietHoaDonDichVu.Include(x => x.DichVu).ToListAsync();
+
+            var result = list
+                .GroupBy(x => x.IdDichVu)
+                .Select(group => new DoanhThuDVVM
+                {
+                    Id = group.Key,
+                    TenDichVu = group.First().DichVu?.Ten,
+                    DoanhThu = group.Sum(x =>x.DonGia)
+                }).ToList();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DichVu>> TopDichVu()
+        {
+            var list = await _context.ChiTietHoaDonDichVu
+                .Include(ct => ct.DichVu)
+                .ToListAsync(); // Lấy toàn bộ dữ liệu trước
+
+            var DichVu = list
+                .GroupBy(ct => ct.IdDichVu)
+                .Select(g => new
+                {
+                    DichVu = g.First().DichVu,
+                    DoanhThu = g.Sum(ct => ct.DonGia)
+                })
+                .OrderByDescending(x => x.DoanhThu)
+                .Select(x => x.DichVu)
+                .ToList();
+
+            return DichVu;
+        }
+
+        public async Task<IEnumerable<SanPham>> TopSanPham()
+        {
+            var list = await _context.ChiTietHoaDonSanPham
+                .Include(ct => ct.SanPham)
+                .ToListAsync(); // Lấy toàn bộ dữ liệu trước
+
+            var SanPham = list
+                .GroupBy(ct => ct.IdSanPham)
+                .Select(g => new
+                {
+                    SanPham = g.First().SanPham,
+                    DoanhThu = g.Sum(ct => ct.DonGia * ct.SoLuong)
+                })
+                .OrderByDescending(x => x.DoanhThu)
+                .Select(x => x.SanPham)
+                .ToList();
+
+            return SanPham;
+        }
     }
-            
+
 }

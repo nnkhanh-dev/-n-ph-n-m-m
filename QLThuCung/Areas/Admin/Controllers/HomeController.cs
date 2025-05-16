@@ -43,6 +43,9 @@ namespace QLThuCung.Admin.Controllers
             var kyThuatVienList = await _userManager.GetUsersInRoleAsync("KyThuatVien");
             ViewBag.SoLuongKyThuatVien = kyThuatVienList.Count;
 
+            ViewBag.TopSanPham = await _thongKe.TopSanPham();
+            ViewBag.TopDichVu = await _thongKe.TopDichVu();
+
             return View();
         }
         [Route("/admin/doanhthu")]
@@ -50,6 +53,19 @@ namespace QLThuCung.Admin.Controllers
         {
             var doanhThu = await _thongKe.DoanhThu();
             return Json(new { Data = doanhThu });
+        }
+        [Route("/admin/doanhthu/sanpham")]
+        public async Task<IActionResult> DoanhThuSanPham()
+        {
+            var result = await _thongKe.DoanhThuSanPham();
+            return Json(new {Data = result});
+        }
+
+        [Route("/admin/doanhthu/dichvu")]
+        public async Task<IActionResult> DoanhThuDichVu()
+        {
+            var result = await _thongKe.DoanhThuDichVu();
+            return Json(new { Data = result });
         }
 
         public IActionResult Privacy()
