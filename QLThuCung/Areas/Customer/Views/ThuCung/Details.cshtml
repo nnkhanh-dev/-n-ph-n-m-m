@@ -8,7 +8,7 @@
         <div class="card-body p-5">
             <div class="d-flex">
                 <div class="mx-3">
-                    <div style="width: 200px; aspect-ratio:1/1; overflow: hidden; border-radius: 50%;">
+                    <div class="shadow" style="width: 200px; aspect-ratio:1/1; overflow: hidden; border-radius: 50%;">
                         @{var imageUrl = string.IsNullOrEmpty(Model.AnhDaiDien) ? "/assets/images/default_AvtForPet.jpg" : Model.AnhDaiDien.ToString();}
                         <img class="w-100 h-100" src="@imageUrl"></img>
                     </div>
@@ -16,7 +16,7 @@
                 <div class="mx-3 d-flex align-items-center">
                     <div>
                         <p><strong>Thú cưng: </strong>@Model.Ten</p>
-                        <p><strong>Giới tính: </strong>@{var GioiTinh = Model.GioiTinh == 0 ? "Đực" : "Cái";} @GioiTinh</p>
+                        <p><strong>Giới tính: </strong>@{var GioiTinh = Model.GioiTinh == 1 ? "Đực" : "Cái";} @GioiTinh</p>
                         <p><strong>Giống: </strong>@Model.Giong.Ten</p>
                         <p><strong>Loài: </strong>@Model.Giong.Loai.Ten</p>
                         <p><strong>Tuổi: </strong>@Model.Tuoi Tháng</p>

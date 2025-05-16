@@ -10,9 +10,21 @@ function LoadTableThuCungKH(id) {
             dataSrc: 'data'
         },
         columns: [
-            { data: 'ten' },
-            { data: 'giong.ten' },
-            { data: 'giong.loai.ten' },
+            {
+                data: 'ten',
+                width: '20%',
+                className: 'text-start'
+            },
+            {
+                data: 'giong.ten',
+                width: '20%',
+                className: 'text-start'
+            },
+            {
+                data: 'giong.loai.ten',
+                width: '20%',
+                className: 'text-start'
+            },
             {
                 data: 'id',
                 render: function (data, type, row, meta) {
@@ -21,7 +33,8 @@ function LoadTableThuCungKH(id) {
                         <a class="btn btn-sm btn-primary" href="/khachhang/thucung/chinhsua/${data}">Sửa</a>
                         <button class="btn btn-sm btn-danger btn-delete" data-id="${data}">Xóa</button>
                     `;
-                }
+                },
+                width: '30%'
             }
         ]
     });

@@ -8,5 +8,7 @@ namespace QLThuCung.Areas.Customer.Services
         Task<IEnumerable<HoaDonDichVu>> ListByDate(DateTime NgayChamSoc);
         Task<IEnumerable<HoaDonDichVu>> ListByCustomer(string id);
         Task<decimal> TotalPrice(HoaDonDichVu model);
+        Task<bool> Cancel(int id);
+        Task<HoaDonDichVu> Details(int id);
     }
 }

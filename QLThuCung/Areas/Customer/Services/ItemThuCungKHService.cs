@@ -100,6 +100,7 @@ namespace QLThuCung.Areas.Customer.Services
             item.GhiChu = model.GhiChu;
             item.NguoiCapNhat = model.NguoiCapNhat;
             item.NgayCapNhat = model.NgayCapNhat;
+            item.IdGiong = model.IdGiong;
 
             try
             {

@@ -21,7 +21,7 @@ namespace QLThuCung.Models
         [Required]
         public DateTime NgayChamSoc { get; set; }
         [Required]
-        [Range(0,int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int ThoiGianChamSoc { get; set; }
         [ForeignKey(nameof(DipDacBiet))]
         public int? IdDipDacBiet { get; set; }
@@ -31,13 +31,15 @@ namespace QLThuCung.Models
         [Required]
         public string NguoiTao { get; set; }
         public string? NguoiCapNhat { get; set; }
-        public string? MaThanhToan { get; set;}
+        public string? MaThanhToan { get; set; }
         [ValidateNever]
-        public DipDacBiet DipDacBiet { get; set;}
+        public DipDacBiet DipDacBiet { get; set; }
         [ValidateNever]
-        public PhieuGiamGia PhieuGiamGia { get; set ; }
+        public PhieuGiamGia PhieuGiamGia { get; set; }
         [ValidateNever]
         public ThuCung ThuCung { get; set; }
         public ICollection<ChiTietHoaDonDichVu> ChiTietHoaDonDichVu { get; set; }
+        [ValidateNever]
+        public ICollection<DanhGiaDV> DanhGia { get; set; }
     }
 }

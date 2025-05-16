@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace QLThuCung.Models
 {
@@ -14,6 +15,7 @@ namespace QLThuCung.Models
         public int Loai { get; set; }
         [ForeignKey(nameof(DanhGiaDV))]
         public int IdDanhGia { get; set; }
+        [ValidateNever]
         public DanhGiaDV DanhGiaDV { get; set; }
     }
 }
