@@ -1,4 +1,5 @@
 ﻿let hoaDonsData = [];
+
 $(document).ready(function () {
     // Khi người dùng thay đổi ngày chăm sóc
     $("#NgayChamSoc").change(function () {
@@ -31,16 +32,16 @@ $(document).ready(function () {
 });
 
 function disableBusyTimes(hoaDons) {
-    // Enable lại tất cả option trước
+    const soGiuong = 4;
+
     $("#ThoiGianChamSoc option").prop('disabled', false);
 
-    // Lưu tất cả khoảng thời gian bận
     let busyTimes = [];
 
     hoaDons.forEach(function (hoaDon) {
         let startMinutes = hoaDon.thoiGianChamSoc;
-
         let totalServiceMinutes = 0;
+
         if (hoaDon.chiTietHoaDonDichVu && hoaDon.chiTietHoaDonDichVu.length > 0) {
             hoaDon.chiTietHoaDonDichVu.forEach(function (chiTiet) {
                 if (chiTiet.dichVu && chiTiet.dichVu.thoiGian) {
@@ -50,57 +51,29 @@ function disableBusyTimes(hoaDons) {
         }
 
         let endMinutes = startMinutes + totalServiceMinutes;
-
         busyTimes.push({ start: startMinutes, end: endMinutes });
     });
 
-    // Duyệt từng option để disable nếu bị bận
     $("#ThoiGianChamSoc option").each(function () {
         let option = $(this);
         let value = parseInt(option.val());
 
-        if (isNaN(value)) return; // Bỏ qua option đầu tiên "Chọn giờ đến"
+        if (isNaN(value)) return;
 
+        let endEstimate = value + totalTimeGlobal;
+
+        // Đếm số ca đang bận trong khoảng này
+        let countBusy = 0;
         for (let i = 0; i < busyTimes.length; i++) {
-            if (value >= busyTimes[i].start && value < busyTimes[i].end) {
-                option.prop('disabled', true);
-                break;
+            let bt = busyTimes[i];
+            if ((value < bt.end && endEstimate > bt.start)) {
+                countBusy++;
             }
         }
+
+        // Disable nếu số ca bận >= số giường
+        if (countBusy >= soGiuong || (value < 660 && endEstimate > 660) || endEstimate > 1020) {
+            option.prop('disabled', true);
+        }
     });
-
-    // Lấy danh sách tất cả các option có thể chọn
-    const availableOptions = $('#ThoiGianChamSoc option').not(':disabled');
-    const notAvailableOptions = $('#ThoiGianChamSoc option:disabled');
-
-    // Sau khi disable các option, tiếp tục xử lý các option có thể chọn
-    availableOptions.each(function () {
-        const optionValue = parseInt($(this).val());  // Mốc thời gian của option
-
-        let nextBusyOption = null;
-        // Chỉ tìm nextBusyOption nếu có notAvailableOptions
-        if (notAvailableOptions.length > 0) {
-            notAvailableOptions.each(function () {
-                const val = parseInt($(this).val());
-                if (val > optionValue && (nextBusyOption === null || val < nextBusyOption)) {
-                    nextBusyOption = val;
-                }
-            });
-        }
-
-        // Chỉ thực hiện khi nextBusyOption có giá trị
-        if (nextBusyOption !== null && nextBusyOption - optionValue < totalTimeGlobal) {
-            $(this).prop('disabled', true);
-        }
-
-        if (optionValue + totalTimeGlobal > 1020 ) {
-            $(this).prop('disabled', true);
-        }
-
-        if (optionValue + totalTimeGlobal > 660 && optionValue < 660) {
-            $(this).prop('disabled', true);
-        }
-
-    });
-
 }

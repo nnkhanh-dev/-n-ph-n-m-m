@@ -61,48 +61,7 @@ function updateEstimateTime() {
     // Hiển thị thời gian ước tính
     $('#EstimateTime').text('Thời gian ước tính: ' + totalTime + ' phút');
 
-    // Gọi hàm disableBusyTimes trước khi lấy danh sách các option
-    // Truyền vào dữ liệu hoaDons nếu cần
-    if (typeof hoaDonsData !== 'undefined') {
-        disableBusyTimes(hoaDonsData); // Disable các option bị bận
-    } else {
-        console.error('Dữ liệu hoaDons chưa được tải.');
-    }
-
-    // Lấy danh sách tất cả các option có thể chọn
-    const availableOptions = $('#ThoiGianChamSoc option').not(':disabled');
-
-    const notAvailableOptions = $('#ThoiGianChamSoc option:disabled');
-
-
-    // Sau khi disable các option, tiếp tục xử lý các option có thể chọn
-    availableOptions.each(function () {
-        const optionValue = parseInt($(this).val());  // Mốc thời gian của option
-
-        let nextBusyOption = null;
-        // Chỉ tìm nextBusyOption nếu có notAvailableOptions
-        if (notAvailableOptions.length > 0) {
-            notAvailableOptions.each(function () {
-                const val = parseInt($(this).val());
-                if (val > optionValue && (nextBusyOption === null || val < nextBusyOption)) {
-                    nextBusyOption = val;
-                }
-            });
-        }
-
-        // Chỉ thực hiện khi nextBusyOption có giá trị
-        if (nextBusyOption !== null && nextBusyOption - optionValue < totalTimeGlobal) {
-            $(this).prop('disabled', true);
-        }
-
-        if (optionValue + totalTime > 1020) {
-            $(this).prop('disabled', true);
-        }
-
-        if (optionValue + totalTime > 660 && optionValue < 660) {
-            $(this).prop('disabled', true);
-        }
-    });
+    disableBusyTimes(hoaDonsData);
 }
 
 

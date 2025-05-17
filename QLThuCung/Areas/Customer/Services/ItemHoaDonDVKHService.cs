@@ -1,4 +1,5 @@
 ﻿
+using HotelApp.Areas.Client.Services;
 using Microsoft.EntityFrameworkCore;
 using QLThuCung.Data;
 using QLThuCung.Models;
@@ -8,10 +9,12 @@ namespace QLThuCung.Areas.Customer.Services
     public class ItemHoaDonDVKHService : IHoaDonDVKHService
     {
         private readonly AppDbContext _context;
+        private readonly IVNPayService _vnpayService;
 
-        public ItemHoaDonDVKHService(AppDbContext context)
+        public ItemHoaDonDVKHService(AppDbContext context, IVNPayService vnpayService)
         {
             _context = context;
+            _vnpayService = vnpayService;
         }
 
         public async Task<bool> Create(HoaDonDichVu model)
@@ -28,13 +31,15 @@ namespace QLThuCung.Areas.Customer.Services
                 var hoaDon = new HoaDonDichVu
                 {
                     IdThuCung = model.IdThuCung,
-                    TrangThai = 0,
+                    TrangThai = model.PhuongThucThanhToan == 1 ? -100 : 0,
                     PhuongThucThanhToan = model.PhuongThucThanhToan,
                     NgayChamSoc = model.NgayChamSoc,
                     ThoiGianChamSoc = model.ThoiGianChamSoc,
                     NgayTao = DateTime.Now,
-                    NguoiTao = model.NguoiTao
+                    NguoiTao = model.NguoiTao,
+                    MaThanhToan = model.MaThanhToan
                 };
+
                 _context.HoaDonDichVu.Add(hoaDon);
                 var hoaDonResult = await _context.SaveChangesAsync() > 0;
                 if (!hoaDonResult)
@@ -86,6 +91,20 @@ namespace QLThuCung.Areas.Customer.Services
                                                   .Where(x => x.NgayChamSoc == NgayChamSoc)
                                                   .ToListAsync();
             return list;
+        }
+
+        public async Task<decimal> TotalPrice(HoaDonDichVu model)
+        {
+            decimal totalPrice = 0;
+            if (model == null)
+            {
+                return totalPrice;
+            }
+            foreach(var item in model.ChiTietHoaDonDichVu)
+            {
+                totalPrice += item.DonGia;
+            }
+            return totalPrice;
         }
     }
 }

@@ -553,6 +553,9 @@ namespace QLThuCung.Migrations
                     b.Property<DateTime?>("KetThuc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("MaThanhToan")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("NgayCapNhat")
                         .HasColumnType("datetime2");
 
@@ -603,6 +606,9 @@ namespace QLThuCung.Migrations
 
                     b.Property<int?>("IdPhieuGiamGia")
                         .HasColumnType("int");
+
+                    b.Property<string>("MaThanhToan")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgayCapNhat")
                         .HasColumnType("datetime2");
@@ -1230,7 +1236,7 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.DanhGiaSP", b =>
                 {
                     b.HasOne("QLThuCung.Models.HoaDonSanPham", "HoaDonSanPham")
-                        .WithMany()
+                        .WithMany("DanhGia")
                         .HasForeignKey("IdHoaDon")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1422,6 +1428,8 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.HoaDonSanPham", b =>
                 {
                     b.Navigation("ChiTietHoaDonSanPham");
+
+                    b.Navigation("DanhGia");
                 });
 
             modelBuilder.Entity("QLThuCung.Models.Loai", b =>

@@ -7,5 +7,6 @@ namespace QLThuCung.Areas.Customer.Services
         Task<bool> Create(HoaDonDichVu model);
         Task<IEnumerable<HoaDonDichVu>> ListByDate(DateTime NgayChamSoc);
         Task<IEnumerable<HoaDonDichVu>> ListByCustomer(string id);
+        Task<decimal> TotalPrice(HoaDonDichVu model);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace QLThuCung.Models
 {
@@ -9,7 +10,9 @@ namespace QLThuCung.Models
         [Required]
         [Range(0, int.MaxValue)]
         public int SoLuong { get; set; }
+        [ValidateNever]
         public GioHang GioHang { get; set; }
+        [ValidateNever]
         public SanPham SanPham { get; set; }
     }
 }

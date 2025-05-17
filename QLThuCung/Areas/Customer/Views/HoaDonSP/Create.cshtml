@@ -1,0 +1,89 @@
+﻿@model QLThuCung.Models.HoaDonSanPham
+
+@{
+    decimal total = 0;
+}
+
+<div class="container">
+    <div class="mt-5 pt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/khach-hang">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/khachhang/sanpham">Cửa hàng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Đặt mua sản phẩm</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow m-5 booking-card">
+            <form asp-action="Create" asp-area="Customer" asp-controller="HoaDonSP">
+                <div class="card-header">
+                    <p class="title m-0">ĐẶT MUA SẢN PHẨM</p>
+                </div>
+                <div class="card-body">
+                    <div class="p-3">
+                        <strong>Danh sách sản phẩm</strong>
+                        <div class="list-sanphammua p-3">
+                            @foreach(var item in Model.ChiTietHoaDonSanPham)
+                            {
+                                <div class="card shadow overflow-hidden mb-3">
+                                    <div class="row">
+                                        <div class="col-3 p-0 m-0">
+                                            <div class="card-image ms-2">
+                                                <img src="@item.SanPham.AnhSanPham.FirstOrDefault()?.DuongDan" style="width:100%; object-fit:cover; object-position: center;" alt="Ảnh sản phẩm"></img>
+                                            </div>
+                                        </div>
+                                        <div class="col-9 m-0 d-flex align-items-center">
+                                            <div class="w-100">
+                                                <div class="mb-3"><strong>@item.SanPham.Ten</strong></div>
+                                                <div class="d-flex justify-content-between pe-5">
+                                                    <div><strong>Số lượng:</strong> @item.SoLuong</div>
+                                                    <strong class="text-success">@(((decimal)item.DonGia * item.SoLuong).ToString("N0")) VNĐ</strong>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                total += (item.DonGia * item.SoLuong);
+                            }
+                        </div>
+                        <div class="p-3 w-100 text-end">
+                            <p><strong>Tổng tiền: <span class="text-success">@total.ToString("N0") VNĐ</span></strong></p>
+                        </div>
+                        <div>
+                            <label asp-for="PhuongThucThanhToan" class="mb-2 mt-3"><strong>Phương thức thanh toán</strong></label>
+                            <select asp-for="PhuongThucThanhToan" class="form-control">
+                                <option value="0">Thanh toán khi nhận hàng (COD)</option>
+                                <option value="1">Thanh toán trước (VNPAY)</option>
+                            </select>
+                        </div>
+                        <input type="hidden" asp-for="IdKhachHang"></input>
+                        <input type="hidden" asp-for="NguoiTao"></input>
+                        <input type="hidden" asp-for="DanhGia"></input>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.ChiTietHoaDonSanPham)
+                            {
+                                <input type="hidden" name="ChiTietHoaDonSanPham[@i].IdSanPham" value="@item.IdSanPham" />
+                                <input type="hidden" name="ChiTietHoaDonSanPham[@i].SoLuong" value="@item.SoLuong" />
+                                <input type="hidden" name="ChiTietHoaDonSanPham[@i].DonGia" value="@item.DonGia" />
+                                <input type="hidden" name="ChiTietHoaDonSanPham[@i].IdHoaDon" value="0" />
+                                i++;
+                            }
+                        }
+                        
+                    </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary w-100">Đặt mua</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+
+}

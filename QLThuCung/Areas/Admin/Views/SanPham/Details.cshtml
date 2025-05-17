@@ -1,0 +1,76 @@
+﻿@model QLThuCung.Areas.Admin.ViewModels.SanPhamResponse
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>THÔNG TIN SẢN PHẨM</strong></p>
+        </div>
+        <div class="card-body p-5">
+            <div class="d-flex align-items-center gap-4">
+                <div class="mx-3">
+                    <div style="width: 300px; aspect-ratio:1/1; overflow: hidden;" class="d-flex align-items-center">
+                        <div id="carouselExampleIndicators" class="carousel slide">
+                            <div class="carousel-indicators">
+                                @for (var i = 0; i < Model.AnhSanPham.Count(); i++)
+                                {
+                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                                            class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "")"
+                                            aria-label="Slide @(i + 1)"></button>
+                                }
+                            </div>
+
+                            <div class="carousel-inner">
+                                @for (var i = 0; i < Model.AnhSanPham.Count(); i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@Model.AnhSanPham.ElementAt(i).DuongDan" class="d-block" style="height: 200px; width: 300px;" alt="Ảnh dịch vụ">
+                                    </div>
+                                }
+                            </div>
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mx-3 d-flex justify-content-center align-items-center">
+                    <div>
+                        <p><strong>Tên sản phẩm: </strong>@Model.Ten</p>
+                        <p><strong>Danh mục: </strong>@Model.TenDanhMuc</p>
+                        <p><strong>Giá: </strong>@Model.Gia</p>
+                        <p><strong>Giảm giá:  </strong>@Model.GiamGia</p>
+                        <p><strong>Số lượng: </strong>@Model.SoLuong</p>
+                        <p><strong>Mô tả: </strong>@Model.MoTa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+          @* <div class="d-flex flex-wrap gap-3 mx-3">
+              @if (Model.AnhSanPham != null && Model.AnhSanPham.Any())
+              {
+                  foreach (var a in Model.AnhSanPham)
+                  {
+                      <div style="width: 200px; aspect-ratio: 1/1; overflow: hidden; border-radius: 10px; border: 1px solid #666;">
+                          <img src="@a.DuongDan" style="width: 100%; height: 100%; object-fit: cover;" />
+                      </div>
+                  }
+              }
+              else
+              {
+                  <span>Chưa có ảnh sản phẩm nào</span>
+              }
+          </div> *@
+
+        <div class="card-footer">
+            <a href="/admin/sanpham/chinhsua/@Model.Id" class="btn btn-primary">Cập nhật</a>
+            <a href="/admin/sanpham" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>

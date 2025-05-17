@@ -1,6 +1,6 @@
 namespace QLThuCung.Admin.Models
 {
-    public class ErrorViewModel
+    public class ErrorViewModelAdmin
     {
         public string? RequestId { get; set; }
 

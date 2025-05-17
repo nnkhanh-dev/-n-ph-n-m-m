@@ -1,0 +1,21 @@
+﻿<div class="card shadow my-3 p-4">
+    <div class="container">
+        <h3 class="my-3">Quản lý sản phẩm</h3>
+        <a href="/admin/sanpham/themmoi" class="btn btn-success mb-3">Thêm sản phẩm</a>
+        <table id="sanPhamTable" class="py-3">
+            <thead class="bg-dark text-light">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/LoadData/LoadTableSanPham.js?v=1"></script>
+}

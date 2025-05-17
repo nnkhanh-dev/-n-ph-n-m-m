@@ -46,20 +46,6 @@ document.querySelectorAll('.toggle-submenu').forEach(function (toggle) {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const productCards = document.querySelectorAll(".my_productcard");
-
-    productCards.forEach(function (card) {
-        card.addEventListener("click", function () {
-            const url = card.getAttribute("data-url");
-            if (url) {
-                // Chuyển hướng đến trang chi tiết sản phẩm
-                window.location.href = url;
-            }
-        });
-    });
-});
-
 function decreaseQuantity() {
     var qtyInput = document.getElementById("quantity");
     var current = parseInt(qtyInput.value);
@@ -72,3 +58,13 @@ function increaseQuantity() {
     var max = parseInt(qtyInput.max);
     if (current < max) qtyInput.value = current + 1;
 }
+
+$(document).ready(function () {
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("rangePrice");
+    output.innerHTML = slider.value;
+
+    slider.oninput = function () {
+        output.innerHTML = this.value;
+    }
+});

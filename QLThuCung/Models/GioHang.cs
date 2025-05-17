@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLThuCung.Models
@@ -7,6 +8,7 @@ namespace QLThuCung.Models
     {
         [Key]
         public string IdKhachHang { get; set; }
+        [ValidateNever]
         public NguoiDung KhachHang { get; set; }
         public ICollection<ChiTietGioHang> ChiTietGioHang { get; set; }
     }

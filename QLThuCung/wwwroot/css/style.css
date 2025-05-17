@@ -76,33 +76,44 @@
 }
 
 .my_productcontent{
-    padding: 16px;
+    padding: 16px 16px 32px 16px;
     color: gray;
     margin: 0;
 }
 
 .my_producttitle{
     color: black;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
+    display: block;
+    overflow: hidden;
+    height: 60px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .my_productprice{
     color: green;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
     margin: 0;
 }
 
-.my_productbutton{
+.my_productbutton {
+    padding: 0px;
+    margin: 0px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px 16px 16px;
+    flex-direction: column;
 }
 
-.my_productbutton a{
+.my_productbutton a {
     color: white !important;
+}
+
+.my_productbutton svg {
+    fill: white;
+    width: 18px;
+    margin-right: 10px;
 }
 
 .my_productspecial{
@@ -492,7 +503,8 @@ footer svg{
 .product-detailscard .price{
     color: green;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
+    margin:0px;
 }
 
 .product-detailscard .discount-price{
@@ -531,4 +543,187 @@ footer svg{
     border-radius: 0px;
     background-color: white;
     color: black;
+}
+
+.my-card-sm{
+    width: 300px;
+}
+
+.my-card-sm .card-header{
+    border-radius: 0px;
+    background-color: #3c57d2;
+    color: white;
+}
+
+.my-card-sm .card-title{
+    font-weight: bold;
+    color: #3c57d2;
+    margin: 0px 6px 0px 0px;
+    padding: 0px;
+}
+
+.my-card-sm .card-header svg {
+    fill: white;
+    width: 18px;
+}
+
+.my-card-sm ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.my-card-sm li{
+    padding: 16px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: #3c57d2;
+}
+
+.my-card-sm li.active{
+   background-color: #ccc;
+}
+
+.my-card-sm li:hover{
+    background-color: #ccc;
+}
+
+.my-card-sm .card-body svg {
+    fill: #3c57d2;
+    width: 10px;
+}
+
+.PageTitle-SVG {
+    fill: #3c57d2;
+    width: 30px;
+}
+
+.star{
+    fill: orange !important;
+    width: 20px !important;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background-color: #3c57d2;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background-color: #3c57d2;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.quantity-selector input{
+    padding: 6px 12px;
+    margin: 0px 6px;
+    border-radius: 6px;
+    border: 1px solid gray;
+}
+
+.quantity-selector svg{
+    fill: black;
+    width: 16px;
+}
+
+.product-detailscard .card-header {
+    background-color: #3c57d2;
+    color: white;
+}
+
+.product-detailscard .card-header h3{
+    margin: 0px;
+    padding: 0px;
+}
+
+.product-detailscard button svg{
+    fill: white;
+    width: 18px;
+}
+
+.list-cartitem .cart-itemimg {
+    width: 150px;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.list-cartitem .cart-itemimg img{
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    object-position: center;
+}
+.list-cartitem .cart-checkbox{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-cartitem .cart-btn {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-cartitem .cart-content{
+    width: 80%;
+}
+
+.list-cartitem .cart-itemcontent{
+    width: 60%;
+}
+
+.list-cartitem .quantity-selector{
+    display:flex;
+    align-items:center;
+}
+
+.cart-summary .card-header {
+    background-color: #3c57d2;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cart-summary .card-title {
+    color: #3c57d2;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.cart-summary .special-text {
+    font-weight: bold;
+    font-size: 20px;
 }
