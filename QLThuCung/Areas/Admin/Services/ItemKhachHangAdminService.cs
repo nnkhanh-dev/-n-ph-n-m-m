@@ -6,12 +6,12 @@ using QLThuCung.Models;
 
 namespace QLThuCung.Areas.Admin.Services
 {
-    public class ItemKhachHangAdminService : IKhachHangAdminService
+    public class ItemKyThuatVienAdminService : IKyThuatVienAdminService
     {
         private readonly AppDbContext _context;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public ItemKhachHangAdminService(AppDbContext context, UserManager<NguoiDung> userManager)
+        public ItemKyThuatVienAdminService(AppDbContext context, UserManager<NguoiDung> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -36,7 +36,7 @@ namespace QLThuCung.Areas.Admin.Services
                 {
                     return false;
                 }
-                await _userManager.AddToRoleAsync(user, "KhachHang");
+                await _userManager.AddToRoleAsync(user, "KyThuatVien");
 
                 return true;
             }
@@ -108,7 +108,7 @@ namespace QLThuCung.Areas.Admin.Services
         public async Task<IEnumerable<NguoiDung>> List()
         {
             // Lấy ID của role "NhanVien"
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "KhachHang");
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "KyThuatVien");
             if (role == null) return new List<NguoiDung>();
 
             // Lấy danh sách userId thuộc role này
