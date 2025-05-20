@@ -10,5 +10,6 @@ namespace QLThuCung.Areas.Admin.Services
         Task<IEnumerable<DichVu>> TopDichVu();
         Task<IEnumerable<DoanhThuSPVM>> DoanhThuSanPham();
         Task<IEnumerable<DoanhThuDVVM>> DoanhThuDichVu();
+        Task<byte[]> XuatExcel();
     }
 }

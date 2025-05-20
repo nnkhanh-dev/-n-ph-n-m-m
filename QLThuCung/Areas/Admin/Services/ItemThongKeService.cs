@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosedXML.Excel;
+using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.ViewModels;
 using QLThuCung.Data;
 using QLThuCung.Models;
@@ -70,7 +71,10 @@ namespace QLThuCung.Areas.Admin.Services
 
         public async Task<IEnumerable<DoanhThuSPVM>> DoanhThuSanPham()
         {
-            var list = await _context.ChiTietHoaDonSanPham.Include(x => x.SanPham).ToListAsync();
+            var list = await _context.ChiTietHoaDonSanPham.Include(x => x.SanPham)
+                                                          .Include(x => x.HoaDon)
+                                                          .Where(x => x.HoaDon.TrangThai == 3)
+                                                          .ToListAsync();
 
             var result = list
                 .GroupBy(x => x.IdSanPham)
@@ -86,7 +90,10 @@ namespace QLThuCung.Areas.Admin.Services
 
         public async Task<IEnumerable<DoanhThuDVVM>> DoanhThuDichVu()
         {
-            var list = await _context.ChiTietHoaDonDichVu.Include(x => x.DichVu).ToListAsync();
+            var list = await _context.ChiTietHoaDonDichVu.Include(x => x.DichVu)
+                                                         .Include(x => x.HoaDon)
+                                                         .Where(x => x.HoaDon.TrangThai == 3)
+                                                         .ToListAsync();
 
             var result = list
                 .GroupBy(x => x.IdDichVu)
@@ -138,6 +145,82 @@ namespace QLThuCung.Areas.Admin.Services
                 .ToList();
 
             return SanPham;
+        }
+
+        public async Task<byte[]> XuatExcel()
+        {
+            var data = await DoanhThu(); // lấy từ phương thức bạn đã viết
+
+            // Group dữ liệu theo năm
+            var groupByYear = data
+                .GroupBy(d => d.Nam)
+                .OrderBy(g => g.Key); // để thứ tự năm tăng dần
+
+            using (var workbook = new XLWorkbook())
+            {
+                foreach (var yearGroup in groupByYear)
+                {
+                    var worksheet = workbook.Worksheets.Add($"Năm {yearGroup.Key}");
+
+                    // Tiêu đề đầu
+                    worksheet.Cell("A1").Value = $"Doanh thu năm {yearGroup.Key}";
+                    worksheet.Cell("A1").Style.Font.Bold = true;
+                    worksheet.Cell("A1").Style.Font.FontSize = 16;
+
+                    // Header
+                    worksheet.Cell("A3").Value = "Tháng";
+                    worksheet.Cell("B3").Value = "Quý";
+                    worksheet.Cell("C3").Value = "Doanh thu từ sản phẩm";
+                    worksheet.Cell("D3").Value = "Doanh thu từ dịch vụ";
+                    worksheet.Cell("E3").Value = "Tổng doanh thu";
+
+                    worksheet.Range("A3:E3").Style.Font.Bold = true;
+                    worksheet.Range("A3:E3").Style.Fill.BackgroundColor = XLColor.LightGray;
+
+                    // Group theo Tháng và Quý trong cùng năm
+                    var monthlyData = yearGroup
+                        .GroupBy(x => new { x.Thang, x.Quy })
+                        .OrderBy(x => x.Key.Thang);
+
+                    int row = 4;
+                    foreach (var group in monthlyData)
+                    {
+                        var thang = group.Key.Thang;
+                        var quy = group.Key.Quy;
+
+                        var dv = group.Where(x => x.Loai == "Dịch vụ").Sum(x => x.DoanhThu);
+                        var sp = group.Where(x => x.Loai == "Sản phẩm").Sum(x => x.DoanhThu);
+                        var tong = dv + sp;
+
+                        worksheet.Cell(row, 1).Value = thang;
+                        worksheet.Cell(row, 2).Value = quy;
+                        worksheet.Cell(row, 3).Value = sp;
+                        worksheet.Cell(row, 4).Value = dv;
+                        worksheet.Cell(row, 5).Value = tong;
+
+                        row++;
+                    }
+
+                    // Sau khi viết dữ liệu xong
+                    worksheet.Column(1).Width = 10;  // Tháng
+                    worksheet.Column(2).Width = 10;  // Quý
+                    worksheet.Column(3).Width = 25;  // SP
+                    worksheet.Column(4).Width = 25;  // DV
+                    worksheet.Column(5).Width = 20;  // Tổng
+
+                    worksheet.Range($"A4:A{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    worksheet.Range($"B4:B{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    worksheet.Range($"C4:E{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            
+                }
+
+                // Xuất thành mảng byte
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    return stream.ToArray();
+                }
+            }
         }
     }
 
