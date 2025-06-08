@@ -7,7 +7,7 @@ using QLThuCung.ViewModels;
 namespace QLThuCung.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class CheckoutController : Controller
     {
         private readonly IHoaDonSanPhamAdminService _hoadon;

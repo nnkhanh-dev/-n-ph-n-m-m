@@ -1,20 +1,17 @@
 ﻿using HotelApp.Areas.Client.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Models;
 using QLThuCung.ViewModels;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace QLThuCung.Areas.Admin.Controllers
+namespace QLThuCung.Areas.Employee.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class HoaDonSPController : Controller
+    [Area("Employee")]
+    [Authorize(Roles = "NhanVien")]
+    public class HoaDonSPController1 : Controller
     {
         private readonly IHoaDonSanPhamAdminService _hoadonsp;
         private readonly ISanphamService _sanpham;
@@ -22,7 +19,7 @@ namespace QLThuCung.Areas.Admin.Controllers
         private readonly IVNPayService _vnpayService;
         private readonly ItemNguoiDungAdminService _nguoidung;
 
-        public HoaDonSPController(IHoaDonSanPhamAdminService hoadonsp, ISanphamService sanpham, IHoaDonSanPhamAdminService hoadon, IVNPayService vNPayService, ItemNguoiDungAdminService nguoidung)
+        public HoaDonSPController1(IHoaDonSanPhamAdminService hoadonsp, ISanphamService sanpham, IHoaDonSanPhamAdminService hoadon, IVNPayService vNPayService, ItemNguoiDungAdminService nguoidung)
         {
             _hoadonsp = hoadonsp;
             _sanpham = sanpham;
@@ -31,27 +28,27 @@ namespace QLThuCung.Areas.Admin.Controllers
             _nguoidung = nguoidung;
         }
 
-        [Route("admin/hoadonsanpham")]
+        [Route("employee/hoadonsanpham")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Route("admin/hoadonsanpham/list")]
+        [Route("employee/hoadonsanpham/list")]
         public async Task<IActionResult> List()
         {
             var list = await _hoadonsp.List();
             return Json(new { Data = list });
         }
 
-        [Route("admin/hoadonsanpham/chitiet/{id}")]
+        [Route("employee/hoadonsanpham/chitiet/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var details = await _hoadonsp.Details(id);
             return View(details);
         }
 
-        [Route("admin/hoadonsanpham/buy")]
+        [Route("employee/hoadonsanpham/buy")]
         public async Task<IActionResult> Buy()
         {
             var register = new RegisterVM();
@@ -67,7 +64,7 @@ namespace QLThuCung.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Route("admin/hoadonsanpham/buy")]
+        [Route("employee/hoadonsanpham/buy")]
         public async Task<IActionResult> Buy(List<ChiTietHoaDonSanPham> ChiTietHoaDonSanPham, string customerPhone, string Method)
         {
             var model = new HoaDonSanPham();
@@ -93,7 +90,7 @@ namespace QLThuCung.Areas.Admin.Controllers
                 return View(register);
             }
             model.MaThanhToan = model.NguoiTao + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
-            
+
             model.NgayTao = DateTime.Now;
             var result = await _hoadon.Create(model);
             if (!result)
@@ -102,12 +99,12 @@ namespace QLThuCung.Areas.Admin.Controllers
                 return RedirectToAction("Index", "SanPham");
             }
             HttpContext.Session.Remove("PendingHoaDon");
-            if(model.PhuongThucThanhToan == 1 && Method == "Cash")
+            if (model.PhuongThucThanhToan == 1 && Method == "Cash")
             {
                 string note = model.MaThanhToan;
                 await _hoadonsp.UpdateStatus(note);
                 TempData["Success"] = "Đặt mua thành công!";
-                return RedirectToAction("Index", "HoaDonSP", new { Areas = "Admin" });
+                return RedirectToAction("Index");
             }
             if (model.PhuongThucThanhToan == 1)
             {
@@ -123,7 +120,7 @@ namespace QLThuCung.Areas.Admin.Controllers
             return RedirectToAction("Index", "SanPham");
         }
 
-        [Route("/admin/hoadonsanpham/update")]
+        [Route("/employee/hoadonsanpham/update")]
         [HttpGet]
         public async Task<IActionResult> Update(string id, string status)
         {

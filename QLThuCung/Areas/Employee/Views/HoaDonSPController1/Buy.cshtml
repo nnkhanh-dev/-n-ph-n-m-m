@@ -4,23 +4,22 @@
         TẠO ĐƠN MUA
     </div>
     <div class="card-body">
-            <div class="mb-3 d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-2">
-                    <label class="form-label">Chọn số điện thoại khách hàng:</label>
-                    <select id="selectCustomerPhone" asp-items="ViewBag.NguoiDung as List<SelectListItem>" class="form-select" style="width: 300px;">
-                        <option></option> <!-- cho phép chọn rỗng -->
-                        <!-- thêm option tùy ý -->
-                    </select>
-                </div>
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <label class="form-label">Chọn số điện thoại khách hàng:</label>
+                <select id="selectCustomerPhone" asp-items="ViewBag.NguoiDung as List<SelectListItem>" class="form-select" style="width: 300px;">
+                    <option></option> <!-- cho phép chọn rỗng -->
+                    <!-- thêm option tùy ý -->
+                </select>
+            </div>
 
             <a href="/dang-ky" class="btn btn-success">Khác</a>
+        </div>
+        <div id="otherCustomerForm" class="m-3" style="display: none; overflow: hidden; transition: max-height 0.5s ease; max-height: 0;">
+            <div class="container-fluid d-flex justify-content-center align-items-center flex-column rounded" style="border: 1px solid #555; padding: 10px; height: max-content;">
             </div>
-            <div id="otherCustomerForm" class="m-3" style="display: none; overflow: hidden; transition: max-height 0.5s ease; max-height: 0;">
-                <div class="container-fluid d-flex justify-content-center align-items-center flex-column rounded" style="border: 1px solid #555; padding: 10px; height: max-content;">
-                    
-                </div>
-            </div>
-        <form id="buyForm" asp-action="Buy" asp-controller="HoaDonSP" asp-area="Admin">
+        </div>
+        <form id="buyForm" method="post" action="/employee/hoadonsanpham/buy">
             <table class="table table-bordered table-striped text-center align-middle">
                 <thead class="table-dark">
                     <tr>
@@ -41,16 +40,16 @@
                             <td>
                                 <input type="number" class="form-control quantity-input" data-index="@item.Id" data-price="@item.Gia" min="0" max="@item.SoLuong" value="0" />
                             </td>
-                           @*  <td>
-                                <input type="checkbox" class="form-check-input product-checkbox" data-index="@item.Id" />
-                            </td> *@
+                            @*  <td>
+                        <input type="checkbox" class="form-check-input product-checkbox" data-index="@item.Id" />
+                        </td> *@
                         </tr>
                     }
                 </tbody>
             </table>
 
             @{
-                
+
             }
 
             <div class="d-flex justify-content-between">
@@ -59,12 +58,12 @@
 
             <div class="row mt-3">
                 @* <div class="col-md-4">
-                    <label>Phụ phí:</label>
-                    <input type="number" id="extraFee" class="form-control" value="0">
+                <label>Phụ phí:</label>
+                <input type="number" id="extraFee" class="form-control" value="0">
                 </div>
                 <div class="col-md-4">
-                    <label>Ưu đãi:</label>
-                    <input type="number" id="discount" class="form-control" value="0">
+                <label>Ưu đãi:</label>
+                <input type="number" id="discount" class="form-control" value="0">
                 </div> *@
                 <div class="col-md-4">
                     <label>Thành tiền:</label>
@@ -72,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-4 d-flex gap-3 justify-content-center">
+            <div class="text-center mt-4">
                 <button class="btn btn-primary px-5" type="submit" name="Method" value="VNPay">Thanh toán VNPay</button>
                 <button class="btn btn-success px-5" type="submit" name="Method" value="Cash">Thanh toán tiền mặt</button>
             </div>
@@ -153,7 +152,7 @@
                 });
 
                 form.append(`<input type="hidden" name="customerPhone" value="${selectedPhone}" />`)
-                console.log(selectedPhone)
+
                 // Sau khi thêm xong các input => submit lại form
                 this.submit(); // dùng `this` để gọi lại chính form đã bị chặn
             });

@@ -11,9 +11,11 @@
                 <div class="mini-cardsubtitle card">Thông tin chung</div>
                 <div><strong>Khách hàng: </strong>@Model.KhachHang.HoTen</div>
                 <div><strong>Ngày đặt mua: </strong>@Model.NgayTao.ToString("dd/MM/yyyy")</div>
-                <div><strong>Phương thức thanh toán: </strong>@{
+                <div>
+                    <strong>Phương thức thanh toán: </strong>@{
                         var PTTT = Model.PhuongThucThanhToan == 0 ? "COD" : "VNPAY";
-                    } @PTTT</div>
+                    } @PTTT
+                </div>
                 @{
                     string trangThaiText;
                     string trangThaiClass;
@@ -129,7 +131,7 @@
             {
                 <label>Cập nhật trạng thái</label>
                 <select id="status" class="p-2 w-100 rounded mt-2 mb-3">
-                    <option selected="@(Model.TrangThai==-1?true : false)" value="-1" >Hủy</option>
+                    <option selected="@(Model.TrangThai==-1?true : false)" value="-1">Hủy</option>
                     <option selected="@(Model.TrangThai==0?true : false)" value="0">Chờ xử lý</option>
                     <option selected="@(Model.TrangThai==1?true : false)" value="1">Đã xử lý</option>
                     <option selected="@(Model.TrangThai==2?true : false)" value="2">Chờ Thanh Toán</option>
@@ -150,7 +152,7 @@
                     }
                 }
 
-                <a href="/admin/hoadonsanpham" class="btn btn-secondary">Quay lại</a>
+                <a href="/employee/hoadonsanpham" class="btn btn-secondary">Quay lại</a>
             </div>
         </div>
 
@@ -172,7 +174,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/admin/hoadonsanpham/update?id=${id}&status=${selectedValue}`,
+                            url: `/employee/hoadonsanpham/update?id=${id}&status=${selectedValue}`,
                             type: 'GET',
                             success: function () {
                                 toastr.success('Cập nhật thành công!');

@@ -113,21 +113,25 @@ namespace QLThuCung.Areas.Admin.Services
 
         public async Task<IEnumerable<HoaDonSanPhamDTO>> List()
         {
-            var list = await _context.HoaDonSanPham.Include(x => x.ChiTietHoaDonSanPham)
-                                                    .Include(x => x.DanhGia)
-                                                    .Include(x => x.KhachHang)
-                                                    .Select(x => new HoaDonSanPhamDTO
-                                                    {
-                                                        Id = x.Id,
-                                                        HoTenKhach = x.KhachHang.HoTen,
-                                                        TrangThai = x.TrangThai,
-                                                        ChiTietHoaDonSanPham = x.ChiTietHoaDonSanPham,
-                                                        NgayTao =x.NgayTao,
-                                                        IdKhachHang = x.IdKhachHang,
-                                                    })
-                                                    .ToListAsync();
+            var list = await _context.HoaDonSanPham
+                .Include(x => x.ChiTietHoaDonSanPham)
+                .Include(x => x.DanhGia)
+                .Include(x => x.KhachHang)
+                .OrderByDescending(x => x.NgayTao) 
+                .Select(x => new HoaDonSanPhamDTO
+                {
+                    Id = x.Id,
+                    HoTenKhach = x.KhachHang.HoTen,
+                    TrangThai = x.TrangThai,
+                    ChiTietHoaDonSanPham = x.ChiTietHoaDonSanPham,
+                    NgayTao = x.NgayTao,
+                    IdKhachHang = x.IdKhachHang,
+                })
+                .ToListAsync();
+
             return list;
         }
+
 
         public async Task<IEnumerable<HoaDonSanPham>> ListByCustomer(string id)
         {

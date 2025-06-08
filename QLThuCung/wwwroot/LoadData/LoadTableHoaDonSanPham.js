@@ -4,6 +4,7 @@
 
 function LoadTableHoaDonSanPham() {
     const table = $('#HoaDonSanPhamTable').DataTable({
+        order: [[1, 'desc']],
         ajax: {
             url: '/admin/hoadonsanpham/list',
             dataSrc: 'data'
