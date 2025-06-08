@@ -79,6 +79,7 @@ namespace QLThuCung.Areas.Technician.Controllers
                     tenKhachHang = h.ThuCung?.KhachHang?.HoTen ?? "Chưa xác định",
                     tenThuCung = h.ThuCung?.Ten ?? "Chưa có",
                     ngayChamSoc = h.NgayChamSoc,
+                    trangThai = h.TrangThai,
                     tongTien = tongTien
                 });
             }
