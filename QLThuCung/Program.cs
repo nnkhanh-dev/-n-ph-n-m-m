@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Areas.Customer.Services;
+using QLThuCung.Areas.Technician.Services;
 using QLThuCung.Data;
 using QLThuCung.Models;
 
@@ -31,6 +32,10 @@ builder.Services.AddScoped<IGiongKHService, ItemGiongKHService>();
 builder.Services.AddScoped<ILoaiKHService, ItemLoaiKHService>();
 builder.Services.AddScoped<IDanhGiaDVKHService, ItemDanhGiaDVKHService>();
 builder.Services.AddScoped<IDanhGiaSPKHService, ItemDanhGiaSPKHService>();
+builder.Services.AddScoped<IDichVuAdminService, ItemDichVuAdminService>();
+builder.Services.AddScoped<IHoaDonDichVuADService, ItemHoaDonDichVuADService>();
+builder.Services.AddScoped<IThongKeTechnicianService, ItemThongKeTechnicianService>();
+builder.Services.AddScoped<IHoaDonDichVuTechnicianService, ItemHoaDonDichVuTechnicianService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.

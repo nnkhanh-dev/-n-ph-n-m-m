@@ -1,0 +1,333 @@
+﻿@model QLThuCung.Models.DichVu
+
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fdfdfd;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        color: #3b5bfd;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        box-shadow: none;
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #3b5bfd;
+        border-color: #3b5bfd;
+    }
+
+    .btn-secondary {
+        margin-left: 10px;
+    }
+
+    .upload-area {
+        cursor: pointer;
+    }
+
+        .upload-area:hover {
+            background-color: #f8f9fa;
+        }
+
+    #new-image-preview img {
+        height: 60px;
+        width: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+
+    .custom-price-input, .fixed-price-input, .gia-container {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .custom-price-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+        .custom-price-row button {
+            margin-left: 10px;
+        }
+</style>
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>TẠO MỚI DỊCH VỤ</strong></p>
+        </div>
+
+        <form asp-action="Create" asp-controller="DichVu" asp-area="Admin" method="post" enctype="multipart/form-data">
+            <div class="card-body p-5">
+                <div class="d-flex">
+                    <div class="mx-3 flex-fill">
+                        <div class="mb-3">
+                            <label asp-for="Ten">Tên dịch vụ:</label>
+                            <input asp-for="Ten" class="form-control" />
+                            <span class="text-danger" asp-validation-for="Ten"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ThoiGian">Thời gian (phút):</label>
+                            <input asp-for="ThoiGian" type="number" class="form-control" />
+                            <span class="text-danger" asp-validation-for="ThoiGian"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MoTa">Mô tả:</label>
+                            <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                            <span class="text-danger" asp-validation-for="MoTa"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrangThai">Trạng thái:</label>
+                            <select asp-for="TrangThai" class="form-control">
+                                <option value="0">Đang mở</option>
+                                <option value="-1">Đã đóng</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="TrangThai"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tải lên hình ảnh</label>
+                            <div class="upload-area p-4 border border-2 border-dashed rounded bg-light text-center mb-2">
+                                <input type="file" id="NewImages" name="NewImages" multiple accept="image/*" class="form-control" onchange="previewNewImages()" />
+                                <small class="text-muted">Chọn nhiều hình ảnh nếu cần.</small>
+                            </div>
+                            <div id="new-image-preview" class="d-flex flex-wrap gap-3"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Chọn loại hình tính giá:</label>
+                            <select id="LoaiTinhGia" name="LoaiTinhGia" class="form-control" onchange="togglePriceInput()">
+                                <option value="">-- Chọn loại --</option>
+                                <option value="0">Cố định</option>
+                                <option value="1">Theo cân nặng</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 fixed-price-input" id="FixedPriceInput">
+                            <label>Giá cố định (nghìn đồng):</label>
+                            <input type="number" id="GiaCoDinh" name="GiaCoDinh" class="form-control" step="0.01" />
+                        </div>
+
+                        <div class="mb-3 gia-container" id="GiaContainer">
+                            <label>Chọn bảng giá:</label>
+                            <select id="GiaId" name="GiaId" class="form-control" onchange="toggleCustomPriceInput()">
+                                <option value="">-- Chọn bảng giá --</option>
+                                @{
+                                    var bangGiaDVList = ViewBag.BangGiaDVList as List<int>;
+                                    if (bangGiaDVList != null && bangGiaDVList.Any())
+                                    {
+                                        for (int i = 0; i < bangGiaDVList.Count; i++)
+                                        {
+                                            <option value="@bangGiaDVList[i]">Bảng giá @bangGiaDVList[i]</option>
+                                        }
+                                    }
+                                }
+                                <option value="Khac">Khác</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-price-input" id="CustomPriceInput">
+                            <label>Thêm bảng giá mới:</label>
+                            <div class="custom-price-row">
+                                <input type="number" id="CustomCanNang" name="CustomCanNang" placeholder="Cân nặng (kg)" step="0.01" class="form-control" />
+                                <input type="number" id="CustomChiPhi" name="CustomChiPhi" placeholder="Giá (VND)" step="0.01" class="form-control" />
+                                <button type="button" class="btn btn-secondary" onclick="addCustomPriceRow()">+</button>
+                            </div>
+                            <div id="custom-price-rows"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Tạo mới</button>
+                <a href="/admin/dichvu" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let imageFiles = [];
+
+    function previewNewImages() {
+        const input = document.getElementById('NewImages');
+        const previewContainer = document.getElementById('new-image-preview');
+
+        // Lấy các file mới từ input
+        const newFiles = Array.from(input.files).filter(file =>
+            !imageFiles.some(existingFile =>
+                existingFile.name === file.name && existingFile.size === file.size
+            )
+        );
+
+        // Thêm các file mới vào mảng imageFiles
+        imageFiles.push(...newFiles);
+
+        // Hiển thị các hình ảnh mới trong preview
+        newFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                const globalIndex = imageFiles.length - newFiles.length + index; // Tính chỉ số toàn cục
+                container.innerHTML = `
+                    <img src="${e.target.result}" />
+                    <button type="button" class="delete-btn" data-index="${globalIndex}" onclick="deleteNewImage(${globalIndex})">X</button>
+                `;
+                previewContainer.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Cập nhật lại input.files để đồng bộ với imageFiles
+        const dataTransfer = new DataTransfer();
+        imageFiles.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+
+        // Nếu không còn hình ảnh, hiển thị thông báo
+        if (imageFiles.length === 0) {
+            previewContainer.innerHTML = '<p>Không có hình ảnh</p>';
+        }
+    }
+
+    function deleteNewImage(index) {
+        const input = document.getElementById('NewImages');
+        const previewContainer = document.getElementById('new-image-preview');
+
+        // Xóa file tại vị trí index khỏi imageFiles
+        imageFiles.splice(index, 1);
+
+        // Cập nhật lại input.files
+        const dataTransfer = new DataTransfer();
+        imageFiles.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+
+        // Xóa toàn bộ preview và vẽ lại từ imageFiles
+        previewContainer.innerHTML = '';
+        imageFiles.forEach((file, i) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                container.innerHTML = `
+                    <img src="${e.target.result}" />
+                    <button type="button" class="delete-btn" data-index="${i}" onclick="deleteNewImage(${i})">X</button>
+                `;
+                previewContainer.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Nếu không còn hình ảnh, hiển thị thông báo
+        if (imageFiles.length === 0) {
+            previewContainer.innerHTML = '<p>Không có hình ảnh</p>';
+        }
+    }
+
+    function togglePriceInput() {
+        const loaiTinhGia = document.getElementById('LoaiTinhGia').value;
+        const fixedPriceInput = document.getElementById('FixedPriceInput');
+        const customPriceInput = document.getElementById('CustomPriceInput');
+        const giaContainer = document.getElementById('GiaContainer');
+
+        fixedPriceInput.style.display = 'none';
+        customPriceInput.style.display = 'none';
+        giaContainer.style.display = 'none';
+
+        if (loaiTinhGia === '0') { // Cố định
+            fixedPriceInput.style.display = 'block';
+        } else if (loaiTinhGia === '1') { // Theo cân nặng
+            customPriceInput.style.display = 'block';
+        }
+    }
+
+    function toggleCustomPriceInput() {
+        const giaId = document.getElementById('GiaId').value;
+        const customPriceInput = document.getElementById('CustomPriceInput');
+        if (giaId === 'Khac') {
+            customPriceInput.style.display = 'block';
+        } else {
+            customPriceInput.style.display = 'none';
+            document.getElementById('custom-price-rows').innerHTML = '';
+            document.getElementById('CustomCanNang').value = '';
+            document.getElementById('CustomChiPhi').value = '';
+        }
+    }
+
+    function addCustomPriceRow() {
+        const canNang = document.getElementById('CustomCanNang').value;
+        const chiPhi = document.getElementById('CustomChiPhi').value;
+        if (canNang && chiPhi) {
+            const rowsContainer = document.getElementById('custom-price-rows');
+            const row = document.createElement('div');
+            row.className = 'custom-price-row';
+            row.innerHTML = `
+                <div class="card p-4 shadow d-flex flex-row">
+                    <span>Cân nặng: ${canNang} kg - Giá: ${chiPhi} VND</span>
+                    <input type="hidden" name="CustomCanNangList" value="${canNang}" />
+                    <input type="hidden" name="CustomChiPhiList" value="${chiPhi}" />
+                    <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+                </div>
+            `;
+            rowsContainer.appendChild(row);
+            document.getElementById('CustomCanNang').value = '';
+            document.getElementById('CustomChiPhi').value = '';
+        } else {
+            alert('Vui lòng nhập cả cân nặng và giá!');
+        }
+    }
+
+    window.onload = function() {
+        togglePriceInput();
+    };
+</script>

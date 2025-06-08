@@ -57,7 +57,7 @@ namespace QLThuCung.Controllers
                     return RedirectToAction("Index", "Home", new { area = "Employee" });
 
                 if (roles.Contains("KyThuatVien"))
-                    return RedirectToAction("Index", "Home", new { area = "Teachnician" });
+                    return RedirectToAction("Index", "Home", new { area = "Technician" });
 
                 if (roles.Contains("KhachHang"))
                     return RedirectToAction("Index", "Home", new { area = "Customer" });
