@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,12 +39,9 @@ namespace QLThuCung.Admin.Controllers
             var nhanVienList = await _userManager.GetUsersInRoleAsync("NhanVien");
             ViewBag.SoLuongNhanVien = nhanVienList.Count;
 
-            // L?y s? l??ng k? thu?t viên
+            // L?y s? l??ng k? thu?t vi�n
             var kyThuatVienList = await _userManager.GetUsersInRoleAsync("KyThuatVien");
             ViewBag.SoLuongKyThuatVien = kyThuatVienList.Count;
-
-            ViewBag.TopSanPham = await _thongKe.TopSanPham();
-            ViewBag.TopDichVu = await _thongKe.TopDichVu();
 
             return View();
         }
@@ -54,44 +51,6 @@ namespace QLThuCung.Admin.Controllers
             var doanhThu = await _thongKe.DoanhThu();
             return Json(new { Data = doanhThu });
         }
-        [Route("/admin/doanhthu/sanpham")]
-        public async Task<IActionResult> DoanhThuSanPham()
-        {
-            var result = await _thongKe.DoanhThuSanPham();
-            return Json(new {Data = result});
-        }
-
-        [Route("/admin/doanhthu/dichvu")]
-        public async Task<IActionResult> DoanhThuDichVu()
-        {
-            var result = await _thongKe.DoanhThuDichVu();
-            return Json(new { Data = result });
-        }
-
-        [Route("/admin/doanhthu/xuatexcel")]
-        public async Task<IActionResult> ExportExcel()
-        {
-            try
-            {
-                var excelBytes = await _thongKe.XuatExcel();
-
-                if (excelBytes == null || excelBytes.Length == 0)
-                {
-                    TempData["Error"] = "Không có dữ liệu để xuất.";
-                    return RedirectToAction("Index"); // hoặc trang phù hợp
-                }
-                return File(
-                    excelBytes,
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "DanhSach.xlsx");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Đã xảy ra lỗi khi xuất file Excel: " + ex.Message;
-                return RedirectToAction("Index"); // hoặc trang phù hợp
-            }
-        }
-
 
         public IActionResult Privacy()
         {

@@ -1,0 +1,188 @@
+﻿@model QLThuCung.Models.HoaDonDichVu
+
+<div class="container">
+    <div class="mt-5 pt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/khach-hang">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/khachhang/hoadondichvu">Hóa đơn dịch vụ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Chi tiết hóa đơn</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card card-invoice mx-auto shadow">
+        <div class="card-header">
+            THÔNG TIN HÓA ĐƠN
+        </div>
+        <div class="card-body">
+            <div class="card shadow list-thongtin p-4 mt-2">
+                <div class="mini-cardsubtitle card">Thông tin chung</div>
+                <div><strong>Thú cưng: </strong>@Model.ThuCung.Ten</div>
+                <div><strong>Ngày chăm sóc: </strong>@Model.NgayChamSoc.ToString("dd/MM/yyyy")</div>
+                @{
+                    var soPhut = Model.ThoiGianChamSoc;
+                    var gio = soPhut / 60;
+                    var phut = soPhut % 60;
+                }
+
+                <div><strong>Thời gian chăm sóc: </strong>@gio giờ @phut phút</div>
+                <div><strong>Bắt đầu: </strong>@Model.BatDau?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Kết thúc: </strong>@Model.KetThuc?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Giường: </strong>@Model.Giuong?.MaGiuong</div>
+                <div><strong>Phương thức thanh toán: </strong>@{var PTTT = Model.PhuongThucThanhToan == 0 ? "Trả sau" : "VNPAY";} @PTTT</div>
+                @{
+                    string trangThaiText;
+                    string trangThaiClass;
+
+                    switch (Model.TrangThai)
+                    {
+                        case -1:
+                            trangThaiText = "Hủy";
+                            trangThaiClass = "bg-danger";
+                            break;
+                        case 0:
+                            trangThaiText = "Chờ xử lý";
+                            trangThaiClass = "bg-secondary";
+                            break;
+                        case 1:
+                            trangThaiText = "Đã xử lý";
+                            trangThaiClass = "bg-info text-dark";
+                            break;
+                        case 2:
+                            trangThaiText = "Chờ thanh toán";
+                            trangThaiClass = "bg-warning text-dark";
+                            break;
+                        case 3:
+                            trangThaiText = "Hoàn thành";
+                            trangThaiClass = "bg-success";
+                            break;
+                        case 4:
+                            trangThaiText = "Không đến";
+                            trangThaiClass = "bg-dark";
+                            break;
+                        default:
+                            trangThaiText = "Không xác định";
+                            trangThaiClass = "bg-dark";
+                            break;
+                    }
+                }
+
+                <div>
+                    <strong>Trạng thái: </strong>
+                    <span class="badge @trangThaiClass">@trangThaiText</span>
+                </div>
+
+                @{
+                    decimal total = 0;
+                    @foreach(var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        total += item.DonGia;
+                    }
+                }
+                <div><strong>Tổng tiền: </strong><span class="price">@total.ToString("N0") VNĐ</span></div>
+            </div>
+
+            <div class="card shadow p-4 my-4">
+                <div class="mini-cardsubtitle card">Danh sách dịch vụ</div>
+                <ul class="list-dichvu">
+                    @foreach(var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        <li>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.DichVu.Ten</strong>
+                                </div>
+                                <div>
+                                    <span class="price">@item.DonGia.ToString("N0") VNĐ</span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            @if (Model.DanhGia.Any())
+            {
+                <div class="card shadow p-4 mb-4">
+                    <div class="mini-cardsubtitle card">Đánh giá của bạn</div>
+                    <div>
+                        <div>
+                            <strong>Sao: </strong>
+                            @{
+                                for (int i = 1; i <= Model.DanhGia.FirstOrDefault().Sao; i++)
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="orange" width="20px" viewBox="0 0 576 512">
+                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                    </svg>
+                                }
+                            }
+                        </div>
+                        <div><strong>Nhận xét: </strong><br><textarea class="form-control" disabled>@Model.DanhGia.FirstOrDefault().NoiDung</textarea></div>
+                        @if (Model.DanhGia.SelectMany(x => x.TepDinhKem).Any())
+                        {
+                            <div>
+                                <strong>Hình ảnh: </strong>
+                                <div class="d-flex">
+                                    @foreach (var item in Model.DanhGia.SelectMany(x => x.TepDinhKem))
+                                    {
+                                        <div class="image-block">
+                                            <img src="@item.DuongDan"></img>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+            }
+
+            <div class="card-footer">
+                @{
+                    if(Model.TrangThai == 3 && !Model.DanhGia.Any())
+                    {
+                        <a href="/khachhang/hoadondichvu/danhgia/@Model.Id" class="btn btn-primary">Đánh giá</a>
+                    }   
+                    if(Model.TrangThai == 0)
+                    {
+                        <button class="btn btn-danger" onclick="Cancel(@Model.Id)">Hủy</button>
+                    }
+                }
+            
+            <a href="/khachhang/hoadondichvu" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        function Cancel(id){
+            Swal.fire({
+            title: 'Xác nhận xóa?',
+            text: "Bạn có chắc chắn muốn hủy đơn này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/khachhang/datlich/huy/${id}`,
+                        type: 'DELETE',
+                        success: function () {
+                            toastr.success('Hủy thành công!');
+                            location.reload();
+                        },
+                        error: function () {
+                            toastr.error('Hủy thất bại!');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

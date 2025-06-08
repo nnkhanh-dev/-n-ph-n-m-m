@@ -24,23 +24,53 @@
         </div>
     </div>
     <div class="card shadow mt-3 p-5">
-        <table id="HoaDonSanPhamTable" class="display pt-3">
+        <table id="myTable" class="display pt-3">
             <thead class="bg-dark text-light">
                 <tr>
-                    <th>Ngày đặt mua</th>
+                    <th>Ngày đặt</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
                     <th>Chức năng</th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>20/12/2025</td>
+                    <td>200000 VNĐ</td>
+                    <td>Đã xử lý</td>
+                    <td>
+                        <a href="/khachhang/thucung/chitiet" class="btn btn-primary">Chi tiết</a>
+                        <a href="#" class="btn btn-success">Cập nhật</a>
+                        <a href="#" class="btn btn-danger">Xóa</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>25/12/2025</td>
+                    <td>3900000 VNĐ</td>
+                    <td>Chờ xử lý</td>
+                    <td>
+                        <a href="/khachhang/thucung/chitiet" class="btn btn-primary">Chi tiết</a>
+                        <a href="#" class="btn btn-success">Cập nhật</a>
+                        <a href="#" class="btn btn-danger">Xóa</a>
+                    </td>
+                </tr>
                 <!-- Thêm dữ liệu khác -->
             </tbody>
         </table>
     </div>
-    <input type="hidden" id="IdNguoiDung" value="@ViewBag.IdNguoiDung"></input>
 </div>
 
 @section Scripts {
-    <script src="~/LoadData/LoadTableHoaDonSPKH.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+            paging: true,           // Phân trang
+            searching: true,        // Ô tìm kiếm
+            ordering: true,         // Cho phép sắp xếp
+            info: true,             // Hiển thị "Đang hiển thị từ... đến..."
+            pageLength: 5,          // Số dòng mỗi trang
+            lengthChange: false     // Ẩn/hiện dropdown chọn số dòng
+        });
+        });
+    </script>
 }

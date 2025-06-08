@@ -1,0 +1,101 @@
+﻿@model QLThuCung.Models.ThuCung
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>CHỈNH SỬA THÔNG TIN</strong></p>
+        </div>
+        <form asp-action="Edit" asp-controller="ThuCung" asp-area="Customer" enctype="multipart/form-data">
+            <div class="card-body p-5">
+                <div class="d-flex">
+                    <div class="mx-3">
+                        <div style="width: 200px; aspect-ratio:1/1; overflow: hidden; border-radius: 50%;">
+                            <img id="preview-avatar" class="w-100 h-100" src="@(
+                                string.IsNullOrWhiteSpace(Model.AnhDaiDien)
+                                    ? "/assets/images/default_avatar.png"
+                                    : Model.AnhDaiDien
+                            )">
+                        </div>
+                    </div>
+                    <div class="mx-3 d-flex justify-content-center align-items-center">
+                        <input type="hidden" id="IdLoaiCB" value="@Model.Giong.IdLoai"></input>
+                        <input type="hidden" id="IdGiongCB" value="@Model.IdGiong"></input>
+                        <input type="text" asp-for="NguoiTao" hidden></input>
+                        <input type="text" asp-for="IdKhachHang" hidden></input>
+                        <input type="text" asp-for="Giong.Ten" hidden></input>
+                        <input type="text" asp-for="AnhDaiDien" hidden></input>
+                        <div>
+                            <div>
+                                <label asp-for="Ten">Thú cưng:</label>
+                                <input type="text" asp-for="Ten" class="form-control"></input>
+                                <span class="text-danger" asp-validation-for="Ten"></span>
+                            </div>
+                            <div>
+                                <label asp-for="CanNang">Cân nặng (KG):</label>
+                                <input type="number" step="0.1" asp-for="CanNang" class="form-control"></input>
+                                <span class="text-danger" asp-validation-for="CanNang"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Tuoi">Tuổi (Tháng):</label>
+                                <input type="number" step="1" asp-for="Tuoi" class="form-control"></input>
+                                <span class="text-danger" asp-validation-for="Tuoi"></span>
+                            </div>
+                            <div>
+                                <label asp-for="GioiTinh">Giới tính:</label>
+                                <select asp-for="GioiTinh" class="form-control">
+                                    <option value="">Chọn giới tính</option>
+                                    <option value="1">Đực</option>
+                                    <option value="2">Cái</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="GioiTinh"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Giong.IdLoai">Loài:</label>
+                                <select asp-for="Giong.IdLoai" class="form-control" id="cbLoaiThuCung">
+                                    
+                                </select>
+                                <span class="text-danger" asp-validation-for="Giong.IdLoai"></span>
+                            </div>
+                            <div>
+                                <label asp-for="IdGiong">Giống:</label>
+                                <select asp-for="IdGiong" class="form-control" id="cbGiongThuCung">
+
+                                </select>
+                                <span class="text-danger" asp-validation-for="IdGiong"></span>
+                            </div>
+                            <div>
+                                <label asp-for="DacDiem">Đặc điểm:</label>
+                                <textarea asp-for="DacDiem" class="form-control"></textarea>
+                                <span class="text-danger" asp-validation-for="DacDiem"></span>
+                            </div>
+                            <div>
+                                <label for="AnhMoi">Ảnh đại diện:</label>
+                                <input type="file" name="AnhMoi" accept="image/*" class="form-control" onchange="previewImage(event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a href="/khachhang/thucung" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <script src="~/LoadData/LoadCDLoaiGiong.js"></script>
+}

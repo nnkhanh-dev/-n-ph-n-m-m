@@ -21,8 +21,6 @@ namespace QLThuCung.Models
         public DateTime NgayTao { get; set; }
         public DateTime? NgayCapNhat { get; set; }
         [Required]
-        public string DiaChi {  get; set; }
-        [Required]
         public string NguoiTao { get; set; }
         public string? NguoiCapNhat { get; set; }
         public string? MaThanhToan { get; set; }
