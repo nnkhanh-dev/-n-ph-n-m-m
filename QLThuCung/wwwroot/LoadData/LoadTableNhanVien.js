@@ -1,8 +1,8 @@
 ﻿$(document).ready(function () {
     const table = $('#nhanVienTable').DataTable({ // ← GÁN vào biến table
         ajax: {
-            url: 'https://localhost:44345/admin/nhanvien/list'
-            dataSrc: 'data'
+            url: 'https://localhost:44345/admin/nhanvien/list',
+            dataSrc: 'data',
         },
         columns: [
             { data: 'hoTen' },

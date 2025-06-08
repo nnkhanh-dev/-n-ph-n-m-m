@@ -71,7 +71,7 @@ namespace QLThuCung.Areas.Admin.Services
                 await _context.SanPham.AddAsync(sp);
                 await _context.SaveChangesAsync(); // Lúc này sp.Id mới được tạo
 
-                if (model.AnhSanPham != null && model.AnhSanPham.Any())
+                if (model.ListAnh != null && model.ListAnh.Any())
                 {
                     foreach (string image in model.ListAnh)
                     {

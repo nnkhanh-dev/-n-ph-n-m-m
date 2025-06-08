@@ -190,6 +190,7 @@ namespace QLThuCung.Areas.Admin.Services
                     }
 
                     hoadon.TrangThai = 3;
+                    hoadon.PhuongThucThanhToan = 1;
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
