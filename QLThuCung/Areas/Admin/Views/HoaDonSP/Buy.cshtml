@@ -1,0 +1,158 @@
+﻿@model QLThuCung.ViewModels.RegisterVM
+<div class="card shadow" style="max-width: 700px; margin: 40px auto;">
+    <div style="padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px;" class="bg-primary text-white text-center">
+        TẠO ĐƠN MUA
+    </div>
+    <div class="card-body">
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="form-label">Chọn số điện thoại khách hàng:</label>
+                    <select id="selectCustomerPhone" asp-items="ViewBag.NguoiDung as List<SelectListItem>" class="form-select" style="width: 300px;">
+                        <option></option> <!-- cho phép chọn rỗng -->
+                        <!-- thêm option tùy ý -->
+                    </select>
+                </div>
+
+            <a href="/dang-ky" class="btn btn-success">Khác</a>
+            </div>
+            <div id="otherCustomerForm" class="m-3" style="display: none; overflow: hidden; transition: max-height 0.5s ease; max-height: 0;">
+                <div class="container-fluid d-flex justify-content-center align-items-center flex-column rounded" style="border: 1px solid #555; padding: 10px; height: max-content;">
+                    
+                </div>
+            </div>
+        <form id="buyForm" asp-action="Buy" asp-controller="HoaDonSP" asp-area="Admin">
+            <table class="table table-bordered table-striped text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng có thể</th>
+                        <th>Số lượng mua</th>
+                        @* <th>Chọn</th> *@
+                    </tr>
+                </thead>
+                <tbody id="productTable">
+                    @foreach (var item in ViewBag.SanPham)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Ten</td>
+                            <td>@item.SoLuong</td>
+                            <td>
+                                <input type="number" class="form-control quantity-input" data-index="@item.Id" data-price="@item.Gia" min="0" max="@item.SoLuong" value="0" />
+                            </td>
+                           @*  <td>
+                                <input type="checkbox" class="form-check-input product-checkbox" data-index="@item.Id" />
+                            </td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @{
+                
+            }
+
+            <div class="d-flex justify-content-between">
+                <div style="font-weight: bold;">Tổng sản phẩm: <span id="totalQuantity" style="color: green; font-weight: bold;">0 VND</span></div>
+            </div>
+
+            <div class="row mt-3">
+                @* <div class="col-md-4">
+                    <label>Phụ phí:</label>
+                    <input type="number" id="extraFee" class="form-control" value="0">
+                </div>
+                <div class="col-md-4">
+                    <label>Ưu đãi:</label>
+                    <input type="number" id="discount" class="form-control" value="0">
+                </div> *@
+                <div class="col-md-4">
+                    <label>Thành tiền:</label>
+                    <div id="finalPrice" class="form-control bg-light" style="color: green; font-weight: bold;">0 VND</div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-primary px-5" type="submit">Tạo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function updatePrices() {
+            let total = 0;
+            let totalQuantity = 0;
+            $('.quantity-input').each(function () {
+                let quantity = parseInt($(this).val()) || 0;
+                let price = parseInt($(this).data('price')) || 0;
+                total += quantity * price;
+                totalQuantity += quantity;
+            });
+
+            $('#totalPrice').text(total.toLocaleString() + ' VND');
+            $('#totalQuantity').text(totalQuantity);
+
+            let extra = parseInt($('#extraFee').val()) || 0;
+            let discount = parseInt($('#discount').val()) || 0;
+            let final = total + extra - discount;
+            $('#finalPrice').text(final.toLocaleString() + ' VND');
+        }
+
+        $(document).ready(function () {
+            if ($.fn.select2) {
+                $('#selectCustomerPhone').select2({
+                    placeholder: 'Nhập số điện thoại...',
+                    allowClear: true
+                });
+            } else {
+                console.error("Select2 chưa được tải.");
+            }
+
+            $('.quantity-input').on('input change', function () {
+                updatePrices();
+            });
+
+            // Cập nhật giá lần đầu khi trang load
+            updatePrices();
+
+            $('#buyForm').on('submit', function (e) {
+                e.preventDefault(); // chặn submit mặc định
+
+                const form = $(this);
+
+                form.find('input[name^="ChiTietHoaDonSanPham"]').remove();
+
+                let selectedPhone = $('#selectCustomerPhone').val();
+
+                // Gắn lại input hidden mới cho các sản phẩm có số lượng > 0
+                let index = 0;
+                $('#productTable tr').each(function () {
+                    const quantityInput = $(this).find('.quantity-input');
+                    const quantity = parseInt(quantityInput.val()) || 0;
+                    if (quantity > 0) {
+                        const id = quantityInput.data('index');
+                        const price = quantityInput.data('price');
+
+                        form.append(`<input type="hidden" name="ChiTietHoaDonSanPham[${index}].IdSanPham" value="${id}" />`);
+                        form.append(`<input type="hidden" name="ChiTietHoaDonSanPham[${index}].SoLuong" value="${quantity}" />`);
+                        form.append(`<input type="hidden" name="ChiTietHoaDonSanPham[${index}].DonGia" value="${price}" />`);
+                        form.append(`<input type="hidden" name="ChiTietHoaDonSanPham[${index}].IdHoaDon" value="0" />`);
+
+                        index++;
+                    }
+                });
+
+                form.append(`<input type="hidden" name="customerPhone" value="${selectedPhone}" />`)
+
+                // Sau khi thêm xong các input => submit lại form
+                this.submit(); // dùng `this` để gọi lại chính form đã bị chặn
+            });
+        });
+
+
+    </script>
+}
+

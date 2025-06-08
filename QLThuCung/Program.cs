@@ -23,6 +23,8 @@ builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
 builder.Services.AddScoped<ISanphamService, ItemSanPhamAdminService>();
 builder.Services.AddScoped<IDanhMucAdminService, ItemDanhMucAdminService>();
 builder.Services.AddScoped<IAnhSanPhamAdminService, ItemAnhSanPhamAdminService>();
+builder.Services.AddScoped<IHoaDonSanPhamAdminService, ItemHoaDonSanPhamAdminService>();
+builder.Services.AddScoped<ItemNguoiDungAdminService, ItemNguoiDungAdminService>();
 //
 builder.Services.AddScoped<IVNPayService, VNPayService>();
 builder.Services.AddScoped<IDanhMucService, ItemDanhMucService>();
