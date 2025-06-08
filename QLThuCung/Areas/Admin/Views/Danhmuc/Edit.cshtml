@@ -1,0 +1,62 @@
+﻿@model QLThuCung.Models.DanhMuc
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>CHỈNH SỬA THÔNG TIN</strong></p>
+        </div>
+        <form asp-action="Edit" asp-controller="DanhMuc" asp-area="Admin" enctype="multipart/form-data">
+            <div class="card-body p-5">
+                <div class="d-flex">
+                    <div class="mx-3">
+                        <div style="width: 200px; aspect-ratio:1/1; overflow: hidden; border-radius: 50%;">
+                            <img id="preview-avatar" class="w-100 h-100" src="@(
+                                string.IsNullOrWhiteSpace(Model.AnhMinhHoa)
+                                    ? "/assets/images/default_avatar.png"
+                                    : Model.AnhMinhHoa
+                            )">
+                        </div>
+                    </div>
+                    <div class="mx-3 d-flex justify-content-center align-items-center">
+                        <div>
+                            <div>
+                                <label asp-for="Ten">Tên danh mục:</label>
+                                <input type="text" asp-for="Ten" class="form-control"></input>
+                                <span class="text-danger" asp-validation-for="Ten"></span>
+                            </div>
+                            <div>
+                                <label asp-for="MoTa">Mô tả :</label>
+                                <input type="text" asp-for="MoTa" class="form-control"></input>
+                                <span class="text-danger" asp-validation-for="MoTa"></span>
+                            </div>
+                            <div>
+                                <label for="AnhMoi">Ảnh minh họa:</label>
+                                <input type="file" name="AnhMoi" accept="image/*" class="form-control" onchange="previewImage(event)">
+                            </div>
+                            <input asp-for="SanPham" hidden />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a href="/admin/danhmuc" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

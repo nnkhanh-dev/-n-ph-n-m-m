@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QLThuCung.Data;
+﻿using QLThuCung.Data;
 using QLThuCung.Models;
 
 namespace QLThuCung.Areas.Customer.Services
@@ -11,29 +10,6 @@ namespace QLThuCung.Areas.Customer.Services
         public ItemHoaDonSPKHService(AppDbContext context)
         {
             _context = context;
-        }
-
-        public async Task<bool> Cancel(int id)
-        {
-            if (id == null)
-            {
-                return false;
-            }
-            try
-            {
-                var hoaDon = await _context.HoaDonSanPham.FindAsync(id);
-                if (hoaDon == null)
-                {
-                    return false;
-                }
-                hoaDon.TrangThai = -1;
-                _context.HoaDonSanPham.Update(hoaDon);
-                return await _context.SaveChangesAsync() > 0;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
 
         public async Task<bool> Create(HoaDonSanPham model)
@@ -118,25 +94,6 @@ namespace QLThuCung.Areas.Customer.Services
             }
         }
 
-        public async Task<HoaDonSanPham> Details(int id)
-        {
-            var hoaDon = await _context.HoaDonSanPham.Include(x => x.ChiTietHoaDonSanPham)
-                                                        .ThenInclude(x => x.SanPham)
-                                                            .ThenInclude(x => x.AnhSanPham)
-                                                    .Include(x => x.KhachHang)
-                                                    .Include(x => x.DanhGia)
-                                                        .ThenInclude(x => x.TepDinhKem)
-                                                    .FirstOrDefaultAsync(x => x.Id == id);
-            return hoaDon;
-        }
-
-        public async Task<IEnumerable<HoaDonSanPham>> ListByCustomer(string id)
-        {
-            var list = await _context.HoaDonSanPham.Include(x => x.ChiTietHoaDonSanPham)
-                                                 .Include(x => x.DanhGia)
-                                                 .Where(x => x.IdKhachHang == id && x.TrangThai != -100)
-                                                 .ToListAsync();
-            return list;
-        }
+ 
     }
 }

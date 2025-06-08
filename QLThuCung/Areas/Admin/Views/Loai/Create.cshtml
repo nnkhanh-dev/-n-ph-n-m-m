@@ -1,0 +1,45 @@
+﻿@model QLThuCung.Models.Loai
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>THÊM MỚI LOÀI</strong></p>
+        </div>
+        <form asp-action="Create" asp-controller="Loai" asp-area="Admin" enctype="multipart/form-data">
+            <div class="card-body p-5">
+                <div class="d-flex">
+                    <div class="mx-3 d-flex justify-content-center align-items-center">
+                        <div>
+                            <div>
+                                <label asp-for="Ten">Tên loài</label>
+                                <input asp-for="Ten" type="text" placeholder="Nhập tên loài" class="form-control"></input>
+                                <span asp-validation-for="Ten" class="text-danger"></span>
+                            </div>
+
+                            <input asp-for="Giong" hidden />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">THÊM</button>
+                <a href="/admin/loai" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

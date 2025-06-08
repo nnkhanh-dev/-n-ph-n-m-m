@@ -56,6 +56,5 @@ namespace QLThuCung.Data
             }
         }
 
-
     }
 }

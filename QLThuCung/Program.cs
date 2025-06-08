@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QLThuCung.Areas.Admin.Services;
 using QLThuCung.Areas.Customer.Services;
-using QLThuCung.Areas.Technician.Services;
 using QLThuCung.Data;
 using QLThuCung.Models;
 
@@ -20,8 +19,6 @@ builder.Services.AddScoped<IDichVuKHService, ItemDichVuKHService>();
 builder.Services.AddScoped<IThuCungKHService, ItemThuCungKHService>();
 builder.Services.AddScoped<IHoaDonDVKHService, ItemHoaDonDVKHService>();
 builder.Services.AddScoped<INhanVienAdminService, ItemNhanVienAdminService>();
-builder.Services.AddScoped<IKyThuatVienAdminService, ItemKyThuatVienAdminService>();
-builder.Services.AddScoped<IKhachHangAdminService, ItemKhachHangAdminService>();
 builder.Services.AddScoped<IVNPayService, VNPayService>();
 builder.Services.AddScoped<IDanhMucService, ItemDanhMucService>();
 builder.Services.AddScoped<ISanPhamKHService, ItemSanPhamKHService>();
@@ -31,11 +28,10 @@ builder.Services.AddScoped<IThongKeService, ItemThongKeService>();
 builder.Services.AddScoped<IGiongKHService, ItemGiongKHService>();
 builder.Services.AddScoped<ILoaiKHService, ItemLoaiKHService>();
 builder.Services.AddScoped<IDanhGiaDVKHService, ItemDanhGiaDVKHService>();
-builder.Services.AddScoped<IDanhGiaSPKHService, ItemDanhGiaSPKHService>();
-builder.Services.AddScoped<IDichVuAdminService, ItemDichVuAdminService>();
-builder.Services.AddScoped<IHoaDonDichVuADService, ItemHoaDonDichVuADService>();
-builder.Services.AddScoped<IThongKeTechnicianService, ItemThongKeTechnicianService>();
-builder.Services.AddScoped<IHoaDonDichVuTechnicianService, ItemHoaDonDichVuTechnicianService>();
+
+builder.Services.AddScoped<IDanhmucAdminService, ItemDanhmucAdminService>();
+builder.Services.AddScoped<IGiongAdminService, ItemGiongAdminService>();
+builder.Services.AddScoped<ILoaiAdminService, ItemLoaiAdminService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.
@@ -60,6 +56,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 
 

@@ -1,0 +1,23 @@
+﻿@model QLThuCung.Models.Giong
+    
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>THÔNG TIN GIỐNG</strong></p>
+        </div>
+        <div class="card-body p-5">
+            <div class="d-flex">
+                <div class="mx-3 d-flex justify-content-center align-items-center">
+                    <div>
+                        <p><strong>Tên: </strong>@Model.Ten</p>
+                        <p><strong>Loài: </strong>@Model.IdLoai</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="/admin/giong/chinhsua/@Model.Id" class="btn btn-primary">Cập nhật</a>
+            <a href="/admin/giong" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>

@@ -35,8 +35,8 @@ namespace QLThuCung.Data
         public DbSet<TepDinhKemDanhGiaDV> TepDinhKemDanhGiaDV { get; set; }
         public DbSet<ChiTietHoaDonDichVu> ChiTietHoaDonDichVu { get; set; }
         public DbSet<ChiTietHoaDonSanPham> ChiTietHoaDonSanPham { get; set; }
-        public DbSet<Giuong> Giuong { get; set; }
 
+        public DbSet<Giuong> Giuong { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
