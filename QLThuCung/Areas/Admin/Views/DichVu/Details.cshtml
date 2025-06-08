@@ -1,0 +1,160 @@
+﻿@model QLThuCung.Models.DichVu
+<style>
+    table {
+        width: 700px;
+        border-collapse: collapse;
+        margin-top: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #3b5bfd; /* Màu xanh dương dịu */
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    td {
+        background-color: #f9f9f9;
+        color: #3b5bfd;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #3b5bfd;
+    }
+
+    .carousel-inner {
+        max-height: 250px;
+        overflow: hidden;
+        display: flex;
+        /* align-items: center; */
+        /* justify-content: center; */
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+        .carousel-inner img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+</style>
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>THÔNG TIN DỊCH VỤ</strong></p>
+        </div>
+        <div class="card-body p-5">
+            <div class="row">
+                <!-- Thông tin dịch vụ -->
+                <div class="col-md-6">
+                    <p><strong>Tên dịch vụ: </strong>@Model.Ten</p>
+                    <p><strong>Thời gian: </strong>@Model.ThoiGian</p>
+                    <p><strong>Mô tả: </strong>@Model.MoTa</p>
+                    <p><strong>Trạng thái: </strong>@(Model.TrangThai == 0 ? "Đang mở" : "Đã đóng")</p>
+                    <p><strong>Ngày tạo: </strong>@Model.NgayTao.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Bảng giá: </strong></p>
+                    @{
+                        if (Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).Count() == 1)
+                        {
+                            <p class="price mt-3">@Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).FirstOrDefault().ChiPhi.ToString("N0") VNĐ</p>
+                        }
+                        else
+                        {
+                            <table>
+                                <tr>
+                                    <th>Cân nặng</th>
+                                    <th>Chi phí (VNĐ)</th>
+                                </tr>
+                                @{
+                                    var chiTietList = Model.BangGiaDV.SelectMany(x => x.ChiTietBangGiaDV).ToList();
+                                    var n = chiTietList.Count();
+                                    for (int i = 0; i < n; i++)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            // Hàng cho "Dưới CanNang đầu tiên"
+                                            <tr>
+                                                <td>Dưới @chiTietList[i].CanNang.ToString("N0")</td>
+                                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                            </tr>
+                                        }
+
+                                        if (i > 0)
+                                        {
+                                            // Hàng cho các khoảng giữa (CanNang[i-1] - CanNang[i])
+                                            <tr>
+                                                <td>@chiTietList[i - 1].CanNang.ToString("N0") - @chiTietList[i].CanNang.ToString("N0")</td>
+                                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                            </tr>
+                                        }
+
+                                        if (i == n - 1)
+                                        {
+                                            // Hàng cho "Trên CanNang cuối cùng"
+                                            <tr>
+                                                <td>Trên @chiTietList[i].CanNang.ToString("N0")</td>
+                                                <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </table>
+                        }
+                    }
+
+                </div>
+
+                <!-- Slide ảnh dịch vụ -->
+                <div class="col-md-6">
+                    <div id="carouselExampleIndicators" class="carousel slide">
+                        <div class="carousel-indicators">
+                            @for (var i = 0; i < Model.AnhDichVu.Count(); i++)
+                            {
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                                        class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "")"
+                                        aria-label="Slide @(i + 1)"></button>
+                            }
+                        </div>
+
+                        <div class="carousel-inner">
+                            @for (var i = 0; i < Model.AnhDichVu.Count(); i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")" style="max-height: 200px">
+                                    <img src="@Model.AnhDichVu.ElementAt(i).DuongDan" class="d-block w-100" alt="Ảnh dịch vụ">
+                                </div>
+                            }
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <a href="/admin/dichvu/chinhsua/@Model.Id" class="btn btn-primary">Cập nhật</a>
+            <a href="/admin/dichvu" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>

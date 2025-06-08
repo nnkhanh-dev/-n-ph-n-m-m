@@ -155,5 +155,13 @@ namespace QLThuCung.Areas.Customer.Controllers
             TempData["Success"] = "Thêm đánh giá thành công!";
             return RedirectToAction("Details", new { id = model.IdHoaDon });
         }
+
+        [Route("khachhang/hoadondichvu/danhgia/huy/{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var result = await _danhGia.Delete(id);
+            return Json(new { success = result });
+        }
     }
 }

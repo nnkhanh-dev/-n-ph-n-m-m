@@ -1,0 +1,74 @@
+﻿<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex">
+            <svg class="PageTitle-SVG" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#3c57d2">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+            <style type="text/css">
+                .st0 {
+                }</style>
+            <g>
+            <path class="st0" d="M191.4,164.127c29.081-9.964,44.587-41.618,34.622-70.699c-9.952-29.072-41.6-44.592-70.686-34.626 c-29.082,9.956-44.588,41.608-34.632,70.69C130.665,158.582,162.314,174.075,191.4,164.127z"></path>
+            <path class="st0" d="M102.394,250.767v0.01c16.706-25.815,9.316-60.286-16.484-76.986c-25.81-16.691-60.273-9.316-76.978,16.489 v0.01c-16.695,25.805-9.306,60.268,16.495,76.958C51.236,283.957,85.694,276.573,102.394,250.767z"></path>
+            <path class="st0" d="M320.6,164.127c29.086,9.948,60.734-5.545,70.695-34.636c9.956-29.081-5.55-60.734-34.631-70.69 c-29.086-9.966-60.734,5.555-70.686,34.626C276.013,122.509,291.519,154.163,320.6,164.127z"></path>
+            <path class="st0" d="M256,191.489c-87.976,0-185.048,121.816-156.946,208.493c27.132,83.684,111.901,49.195,156.946,49.195 c45.045,0,129.813,34.489,156.945-49.195C441.048,313.305,343.976,191.489,256,191.489z"></path>
+            <path class="st0" d="M503.068,190.289v-0.01c-16.705-25.805-51.166-33.18-76.976-16.489c-25.801,16.7-33.19,51.171-16.486,76.986 v-0.01c16.7,25.806,51.158,33.19,76.968,16.481C512.374,250.557,519.764,216.095,503.068,190.289z"></path>
+                    </g>
+                </g>
+            </svg>
+            <div class="PageTitle m-3">Quản lý hóa đơn dịch vụ</div>
+        </div>
+        <div class="mb-3 d-flex align-items-center" id="filterContainer">
+            
+        </div>
+        <div class="mb-3 d-flex align-items-center">
+            <button id="filterByDateBtn" class="btn btn-info me-2">Lọc theo ngày</button>
+            <div id="filterDateBlock" class="d-none filter-block" style="margin-right: 20px; align-items: center;">
+                <input type="date" id="filterDate" class="form-control me-2" style="max-width: 200px; margin: 10px 0;">
+                <div class="button-group" style="display: flex; justify-content: space-between; width: 100%;">
+                    <button id="applyDateFilter" class="btn btn-secondary">Áp dụng</button>
+                    <button id="cancelDateFilter" class="btn btn-danger">Hủy</button>
+                </div>
+            </div>
+
+            <button id="filterByStatusBtn" class="btn btn-warning me-2">Lọc theo trạng thái</button>
+            <div id="filterStatusBlock" class="d-none filter-block" style="margin-right: 20px; align-items: center;">
+                <select id="filterStatus" class="form-control me-2" style="max-width: 150px; margin: 10px 0;">
+                    <option value="">--Chọn trạng thái--</option>
+                    <option value="0">Chờ xử lý</option>
+                    <option value="1">Đã xử lý</option>
+                    <option value="2">Chờ thanh toán</option>
+                    <option value="3">Hoàn thành</option>
+                    <option value="-1">Hủy</option>
+                </select>
+                <div class="button-group" style="display: flex; justify-content: space-between; width: 100%;">
+                    <button id="applyStatusFilter" class="btn btn-secondary">Áp dụng</button>
+                    <button id="cancelStatusFilter" class="btn btn-danger">Hủy</button>
+                </div>
+            </div>
+
+            <button id="loadAllBills" class="btn btn-primary me-2">Toàn bộ hóa đơn</button>
+            <button id="loadPendingToday" class="btn btn-success">Hóa đơn trong ngày</button>
+        </div>
+    </div>
+    <div class="card shadow mt-3 p-5">
+        <table id="hoaDonDichVuTable" class="display pt-3">
+            <thead class="bg-dark text-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Tên khách hàng</th>
+                    <th>Tên thú cưng</th>
+                    <th>Ngày chăm sóc</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/LoadData/LoadTableHoaDonDichVuTE.js"></script>
+}

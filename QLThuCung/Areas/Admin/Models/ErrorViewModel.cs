@@ -1,4 +1,4 @@
-namespace QLThuCung.Teachnician.Models
+namespace QLThuCung.Admin.Models
 {
     public class ErrorViewModel
     {
