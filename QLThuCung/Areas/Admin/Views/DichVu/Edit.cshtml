@@ -1,0 +1,488 @@
+﻿@model QLThuCung.Models.DichVu
+
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fdfdfd;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        color: #3b5bfd;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        box-shadow: none;
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #3b5bfd;
+        border-color: #3b5bfd;
+    }
+
+    .btn-secondary {
+        margin-left: 10px;
+    }
+
+    .btn-danger {
+        margin-left: 10px;
+    }
+
+    .upload-area {
+        cursor: pointer;
+    }
+
+        .upload-area:hover {
+            background-color: #f8f9fa;
+        }
+
+    #new-image-preview img,
+    #existing-image-preview img {
+        height: 60px;
+        width: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin: 5px;
+    }
+
+    #existing-image-preview .image-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    #existing-image-preview .delete-btn {
+        position: absolute;
+        top: 5px; /* Điều chỉnh vị trí trên */
+        right: 5px; /* Điều chỉnh vị trí bên phải */
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(50%, -50%); /* Căn giữa nút trên góc */
+    }
+
+    #new-image-preview .image-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    #new-image-preview .delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(50%, -50%);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .price-edit-container {
+        margin-top: 10px;
+        display: none;
+    }
+
+    .price-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+        .price-row input[type="number"] {
+            width: 100px;
+        }
+
+        .price-row button {
+            margin-left: 10px;
+        }
+</style>
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto">
+        <div class="card-header">
+            <p class="card-title text-center m-0 p-0"><strong>CHỈNH SỬA DỊCH VỤ</strong></p>
+        </div>
+
+        <form asp-action="Edit" asp-controller="DichVu" asp-area="Admin" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+            <div class="card-body p-5">
+                <div class="d-flex">
+                    <div class="mx-3 flex-fill">
+                        <div class="mb-3">
+                            <label asp-for="Ten">Tên dịch vụ:</label>
+                            <input asp-for="Ten" class="form-control" required />
+                            <span class="text-danger" asp-validation-for="Ten"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ThoiGian">Thời gian (phút):</label>
+                            <input asp-for="ThoiGian" type="number" class="form-control" required />
+                            <span class="text-danger" asp-validation-for="ThoiGian"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MoTa">Mô tả:</label>
+                            <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                            <span class="text-danger" asp-validation-for="MoTa"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrangThai">Trạng thái:</label>
+                            <select asp-for="TrangThai" class="form-control">
+                                @(Model.TrangThai == 0 ? "Đang mở" : "Đã đóng")
+                                <option value="0">Đang mở</option>
+                                <option value="-1">Đã đóng</option>
+                                @* Loại bỏ Tag Helper khỏi thuộc tính selected và sử dụng HTML thuần *@
+                                @* <option value="0" @(Model.TrangThai == 0 ? "selected" : "")>Đang mở</option> *@
+                                @* <option value="-1" @(Model.TrangThai == -1 ? "selected" : "")>Đã đóng</option> *@
+                            </select>
+                            <span class="text-danger" asp-validation-for="TrangThai"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hình ảnh hiện tại</label>
+                            <div id="existing-image-preview" class="d-flex flex-wrap gap-3">
+                                @if (Model.AnhDichVu != null && Model.AnhDichVu.Any())
+                                {
+                                    foreach (var anh in Model.AnhDichVu)
+                                    {
+                                        <div class="image-container">
+                                            <img src="@anh.DuongDan" alt="Hình ảnh dịch vụ" />
+                                            <button type="button" class="delete-btn" data-id="@anh.Id" onclick="deleteImage(@anh.Id)">X</button>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Không có hình ảnh</p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tải lên hình ảnh mới</label>
+                            <div class="upload-area p-4 border border-2 border-dashed rounded bg-light text-center mb-2">
+                                <input type="file" id="NewImages" name="NewImages" multiple accept="image/*" class="form-control" onchange="previewNewImages()" />
+                                <small class="text-muted">Chọn nhiều hình ảnh nếu cần.</small>
+                            </div>
+                            <div id="new-image-preview" class="d-flex flex-wrap gap-3"></div>
+                        </div>
+
+                        <div class="mb-3 card p-4 shadow">
+                            @{
+                                var bangGiaDV = Model.BangGiaDV.FirstOrDefault();
+                                if (bangGiaDV != null)
+                                {
+                                    <label><strong>Loại giá: </strong>@(bangGiaDV.Loai == 0 ? "Cố định" : "Theo cân nặng")</label>
+                                    <div id="price-display">
+                                        @if (bangGiaDV.Loai == 0)
+                                        {
+                                            <p class="price mt-3">@bangGiaDV.ChiTietBangGiaDV.FirstOrDefault()?.ChiPhi.ToString("N0") VNĐ</p>
+                                        }
+                                        else if (bangGiaDV.Loai == 1)
+                                        {
+                                            if (bangGiaDV.ChiTietBangGiaDV != null && bangGiaDV.ChiTietBangGiaDV.Any())
+                                            {
+                                                if (bangGiaDV.ChiTietBangGiaDV.Count() == 1)
+                                                {
+                                                    <p class="price mt-3">@bangGiaDV.ChiTietBangGiaDV.FirstOrDefault()?.ChiPhi.ToString("N0") VNĐ</p>
+                                                }
+                                                else
+                                                {
+                                                    <table>
+                                                        <tr>
+                                                            <th>Cân nặng</th>
+                                                            <th>Chi phí (VNĐ)</th>
+                                                        </tr>
+                                                        @{
+                                                            var chiTietList = bangGiaDV.ChiTietBangGiaDV.OrderBy(c => c.CanNang).ToList();
+                                                            var n = chiTietList.Count();
+                                                            for (int i = 0; i < n; i++)
+                                                            {
+                                                                if (i == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <td>Dưới @chiTietList[i].CanNang.ToString("N0") kg</td>
+                                                                        <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                                                    </tr>
+                                                                }
+
+                                                                if (i > 0)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@chiTietList[i - 1].CanNang.ToString("N0") - @chiTietList[i].CanNang.ToString("N0") kg</td>
+                                                                        <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                                                    </tr>
+                                                                }
+
+                                                                if (i == n - 1)
+                                                                {
+                                                                    <tr>
+                                                                        <td>Trên @chiTietList[i].CanNang.ToString("N0") kg</td>
+                                                                        <td>@chiTietList[i].ChiPhi.ToString("N0")</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </table>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p>Không có chi tiết bảng giá</p>
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="price-edit-container" id="price-edit">
+                                        @if (bangGiaDV.Loai == 0)
+                                        {
+                                            <div class="mb-3">
+                                                <label><strong>Giá cố định</strong> (VND):</label>
+                                                <input type="number" name="GiaCoDinh" class="form-control" step="0.01" value="@bangGiaDV.ChiTietBangGiaDV.FirstOrDefault()?.ChiPhi" required />
+                                            </div>
+                                        }
+                                        else if (bangGiaDV.Loai == 1)
+                                        {
+                                            <label><strong>Chỉnh sửa bảng giá:</strong> (Khối lượng / Chi Phí)</label>
+                                            <div id="price-rows" class="mt-4">
+                                                @{
+                                                    var chiTietList = bangGiaDV.ChiTietBangGiaDV.OrderBy(c => c.CanNang).ToList();
+                                                    for (int i = 0; i < chiTietList.Count; i++)
+                                                    {
+                                                        <div class="price-row ">
+                                                            <input type="number" name="CustomCanNangList" placeholder="Cân nặng (kg)" step="0.01" class="form-control" value="@chiTietList[i].CanNang" required />
+                                                            <input type="number" name="CustomChiPhiList" placeholder="Giá (VND)" step="0.01" class="form-control" value="@chiTietList[i].ChiPhi" required />
+                                                            <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">X</button>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                            
+                                        }
+                                        <div class="mt-3 d-flex flex-row">
+                                            <button type="button" class="btn btn-secondary btn-sm m-0" onclick="addPriceRow()">Thêm dòng</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="btn btn-secondary btn-sm" onclick="cancelPriceEdit()">Hủy</button>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary btn-sm mt-2" id="btn btn-primary btn-sm mt-2" onclick="startPriceEdit()">Thay đổi</button>
+                                }
+                                else
+                                {
+                                    <p>Không có bảng giá</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a href="/admin/dichvu" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function startPriceEdit() {
+        document.getElementById('price-display').style.display = 'none';
+        document.getElementById('price-edit').style.display = 'block';
+        document.querySelectorAll('.readonly-input').forEach(input => input.classList.remove('readonly-input'));
+        document.querySelectorAll('.hidden-button').forEach(button => button.classList.remove('hidden-button'));
+        document.getElementById('btn btn-primary btn-sm mt-2').style.display = 'none';
+    }
+
+    function cancelPriceEdit() {
+        document.getElementById('price-display').style.display = 'block';
+        document.getElementById('price-edit').style.display = 'none';
+        document.querySelectorAll('input[type="number"]').forEach(input => input.classList.add('readonly-input'));
+        document.querySelectorAll('button').forEach(button => button.classList.add('hidden-button'));
+        document.getElementById('btn btn-primary btn-sm mt-2').style.display = 'block';
+    }
+
+    function addPriceRow() {
+        const rowsContainer = document.getElementById('price-rows');
+        const row = document.createElement('div');
+        row.className = 'price-row';
+        row.innerHTML = `
+            <input type="number" name="CustomCanNangList" placeholder="Cân nặng (kg)" step="0.01" class="form-control" required />
+            <input type="number" name="CustomChiPhiList" placeholder="Giá (VND)" step="0.01" class="form-control" required />
+            <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">X</button>
+        `;
+        rowsContainer.appendChild(row);
+    }
+
+    function savePriceChanges() {
+        const inputs = document.querySelectorAll('#price-edit input[type="number"]');
+        for (let input of inputs) {
+            if (!input.value) {
+                alert('Vui lòng nhập đầy đủ cân nặng và giá!');
+                return;
+            }
+        }
+
+        document.getElementById('price-display').style.display = 'block';
+        document.getElementById('price-edit').style.display = 'none';
+        document.querySelectorAll('input[type="number"]').forEach(input => input.classList.add('readonly-input'));
+        document.querySelectorAll('button').forEach(button => button.classList.add('hidden-button'));
+    }
+
+    function deleteImage(imageId) {
+        Swal.fire({
+            title: 'Xác nhận xóa?',
+            text: "Bạn có chắc chắn muốn xóa hình này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/dichvu/deleteimage/${imageId}`,
+                    type: 'DELETE',
+                    success: function () {
+                        toastr.success('Xóa thành công!');
+                        const dichVuId = @Model.Id;
+                        setTimeout(() => {
+                            window.location.href = `/admin/dichvu/chinhsua/${dichVuId}`;
+                        }, 1500);
+                        // location.reload()
+                    },
+                    error: function () {
+                        toastr.error('Xóa thất bại!');
+                    }
+                });
+            }
+        });
+    }
+
+    let imageFiles = [];
+
+    function previewNewImages() {
+        const input = document.getElementById('NewImages');
+        const previewContainer = document.getElementById('new-image-preview');
+
+        // Lấy các file mới từ input
+        const newFiles = Array.from(input.files).filter(file =>
+            !imageFiles.some(existingFile =>
+                existingFile.name === file.name && existingFile.size === file.size
+            )
+        );
+
+        // Thêm các file mới vào mảng imageFiles
+        imageFiles.push(...newFiles);
+
+        // Hiển thị các hình ảnh mới trong preview
+        newFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                const globalIndex = imageFiles.length - newFiles.length + index; // Tính chỉ số toàn cục
+                container.innerHTML = `
+                    <img src="${e.target.result}" />
+                    <button type="button" class="delete-btn" data-index="${globalIndex}" onclick="deleteNewImage(${globalIndex})">X</button>
+                `;
+                previewContainer.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Cập nhật lại input.files để đồng bộ với imageFiles
+        const dataTransfer = new DataTransfer();
+        imageFiles.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+
+        // Nếu không còn hình ảnh, hiển thị thông báo
+        if (imageFiles.length === 0) {
+            previewContainer.innerHTML = '<p>Không có hình ảnh</p>';
+        }
+    }
+
+    function deleteNewImage(index) {
+        const input = document.getElementById('NewImages');
+        const previewContainer = document.getElementById('new-image-preview');
+
+        // Xóa file tại vị trí index khỏi imageFiles
+        imageFiles.splice(index, 1);
+
+        // Cập nhật lại input.files
+        const dataTransfer = new DataTransfer();
+        imageFiles.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+
+        // Xóa toàn bộ preview và vẽ lại từ imageFiles
+        previewContainer.innerHTML = '';
+        imageFiles.forEach((file, i) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                container.innerHTML = `
+                    <img src="${e.target.result}" />
+                    <button type="button" class="delete-btn" data-index="${i}" onclick="deleteNewImage(${i})">X</button>
+                `;
+                previewContainer.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Nếu không còn hình ảnh, hiển thị thông báo
+        if (imageFiles.length === 0) {
+            previewContainer.innerHTML = '<p>Không có hình ảnh</p>';
+        }
+    }
+</script>

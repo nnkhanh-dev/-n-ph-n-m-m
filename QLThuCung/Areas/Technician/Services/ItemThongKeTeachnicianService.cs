@@ -1,23 +1,20 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
-using QLThuCung.Areas.Admin.ViewModels;
+using QLThuCung.Areas.Technician.ViewModels;
 using QLThuCung.Data;
 using QLThuCung.Models;
 
-namespace QLThuCung.Areas.Admin.Services
+namespace QLThuCung.Areas.Technician.Services
 {
-    public class ItemThongKeService : IThongKeService
+    public class ItemThongKeTechnicianService : IThongKeTechnicianService
     {
         private readonly AppDbContext _context;
-
-        public ItemThongKeService(AppDbContext context)
+        public ItemThongKeTechnicianService(AppDbContext context)
         {
             _context = context;
         }
-
         public async Task<IEnumerable<DoanhThuVM>> DoanhThu()
         {
-            // Fetch and process HoaDonDichVu
             var hoaDonDichVus = await _context.HoaDonDichVu
                 .Where(x => x.TrangThai == 3)
                 .Include(x => x.ChiTietHoaDonDichVu)
@@ -36,7 +33,7 @@ namespace QLThuCung.Areas.Admin.Services
                     Quy = g.Key.Quy,
                     Nam = g.Key.Nam,
                     Loai = "Dịch vụ",
-                    DoanhThu = g.Sum(hd => hd.ChiTietHoaDonDichVu.Sum(ct => ct.DonGia)) 
+                    DoanhThu = g.Sum(hd => hd.ChiTietHoaDonDichVu.Sum(ct => ct.DonGia))
                 });
 
             // Fetch and process HoaDonSanPham
@@ -67,6 +64,7 @@ namespace QLThuCung.Areas.Admin.Services
                 .ToList();
 
             return combinedList;
+
         }
 
         public async Task<IEnumerable<DoanhThuSPVM>> DoanhThuSanPham()
@@ -81,7 +79,7 @@ namespace QLThuCung.Areas.Admin.Services
                 .Select(group => new DoanhThuSPVM
                 {
                     Id = group.Key,
-                    TenSanPham = group.First().SanPham?.Ten, 
+                    TenSanPham = group.First().SanPham?.Ten,
                     DoanhThu = group.Sum(x => x.SoLuong * x.DonGia)
                 }).ToList();
 
@@ -101,7 +99,7 @@ namespace QLThuCung.Areas.Admin.Services
                 {
                     Id = group.Key,
                     TenDichVu = group.First().DichVu?.Ten,
-                    DoanhThu = group.Sum(x =>x.DonGia)
+                    DoanhThu = group.Sum(x => x.DonGia)
                 }).ToList();
 
             return result;
@@ -211,7 +209,7 @@ namespace QLThuCung.Areas.Admin.Services
                     worksheet.Range($"A4:A{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     worksheet.Range($"B4:B{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     worksheet.Range($"C4:E{row - 1}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            
+
                 }
 
                 // Xuất thành mảng byte
