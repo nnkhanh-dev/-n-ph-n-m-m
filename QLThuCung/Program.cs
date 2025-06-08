@@ -47,7 +47,7 @@ builder.Services.AddScoped<IHoaDonDichVuTechnicianService, ItemHoaDonDichVuTechn
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure()));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<NguoiDung, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
