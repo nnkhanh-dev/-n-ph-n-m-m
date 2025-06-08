@@ -886,3 +886,8 @@ footer svg{
         object-position: center;
         display: block;
     }
+
+.service-detailscard .modal-header button {
+    background-color: #3c57d2;
+    border: 0px;
+}

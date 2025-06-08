@@ -6,5 +6,6 @@ namespace QLThuCung.Areas.Customer.Services
     {
         Task<DanhGiaDV> Detail(int id);
         Task<bool> Create(DanhGiaDV model);
+        Task<bool> Delete(int id);
     }
 }
