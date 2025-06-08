@@ -30,6 +30,25 @@ namespace QLThuCung.Areas.Customer.Services
             }
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            try
+            {
+                var item = await _context.DanhGiaSP.FindAsync(id);
+                if(item == null)
+                {
+                    return false;
+                }
+                _context.DanhGiaSP.Remove(item);
+                return await _context.SaveChangesAsync() > 0;
+
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<DanhGiaSP> Detail(int id)
         {
             var details = await _context.DanhGiaSP.Include(x => x.TepDinhKem).FirstOrDefaultAsync(x => x.Id == id);
