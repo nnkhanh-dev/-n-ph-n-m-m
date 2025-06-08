@@ -1,0 +1,50 @@
+﻿<div class="sidebar bg-dark text-white p-3" style="min-height: 100vh;">
+    <ul class="nav flex-column sidebar-menu">
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/employee/">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/admin/hoadonsanpham">Quản lý hóa đơn sản phẩm</a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .sidebar{
+        height:100%;
+    }
+
+    .submenu {
+        max-height: 0;
+        overflow: hidden;
+        padding-left: 15px;
+        transition: max-height 0.3s ease, opacity 0.3s ease;
+        opacity: 0;
+    }
+
+        .submenu.show {
+            max-height: 100%; /* đủ lớn để chứa nội dung */
+            opacity: 1;
+        }
+
+    .arrow-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+        transform-origin: center center;
+        width: 20px;
+        height: 20px;
+    }
+
+        .arrow-icon svg {
+            fill: white;
+            width: 100%;
+            height: 100%;
+        }
+
+
+    .toggle-submenu.active .arrow-icon {
+        transform: rotate(180deg);
+    }
+</style>

@@ -1,0 +1,209 @@
+﻿@model QLThuCung.Areas.Admin.ViewModels.SanPhamResquest
+@{
+    var chiTiet = ViewBag.Details;
+}
+
+<div class="container p-5 w-100">
+    <div class="card my-card m-5 mx-auto shadow-lg" style="max-width: 1000px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="card-title m-0">CẬP NHẬT SẢN PHẨM</h4>
+        </div>
+
+        <form asp-action="Edit" asp-controller="SanPham" asp-area="Admin" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="Id" value="@ViewBag.Id" />
+            @* <input type="hidden" name="AnhDaXoa" id="AnhDaXoa" /> *@
+
+            <div class="card-body p-5">
+                <div class="row">
+                    <!-- THÔNG TIN SẢN PHẨM -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Ten" class="form-label">Tên sản phẩm</label>
+                            <input asp-for="Ten" class="form-control" placeholder="Nhập tên sản phẩm" value="@chiTiet.Ten" />
+                            <span asp-validation-for="Ten" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MoTa" class="form-label">Mô tả</label>
+                            <textarea asp-for="MoTa" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="MoTa" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SoLuong" class="form-label">Số lượng</label>
+                                <input asp-for="SoLuong" class="form-control" value="@chiTiet.SoLuong" />
+                                <span asp-validation-for="SoLuong" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Gia" class="form-label">Giá</label>
+                                <input asp-for="Gia" class="form-control" value="@chiTiet.Gia" />
+                                <span asp-validation-for="Gia" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GiamGia" class="form-label">Giảm giá (%)</label>
+                            <input asp-for="GiamGia" class="form-control" value="@chiTiet.GiamGia" />
+                            <span asp-validation-for="GiamGia" class="text-danger"></span>
+                        </div>
+
+                         @* <div class="mb-3">
+                             <label asp-for="IdDanhMuc" class="form-label">Danh mục</label>
+                             <select asp-for="IdDanhMuc" asp-items="ViewBag.DanhMuc as List<SelectListItem>" class="form-select">
+                                 <option value="">-- Chọn danh mục --</option>
+                             </select>
+                             <span asp-validation-for="IdDanhMuc" class="text-danger"></span>
+                         </div> *@
+
+                        <div class="mb-3">
+                            <label asp-for="IdDanhMuc" class="form-label">Danh mục</label>
+                            <select asp-for="IdDanhMuc" asp-items="ViewBag.DanhMuc" class="form-select">
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
+                            <span asp-validation-for="IdDanhMuc" class="text-danger"></span>
+                        </div>
+                       
+                    </div>
+
+                    <!-- HÌNH ẢNH -->
+                    <div class="col-md-6">
+                        <label class="form-label">Ảnh sản phẩm hiện tại</label>
+                        <div class="d-flex flex-wrap gap-2 mb-3" id="old-images">
+                            @foreach (var anh in chiTiet.AnhSanPham)
+                            {
+                                <div class="position-relative">
+                                    <img src="@anh.DuongDan" class="rounded border" style="width:100px; height:100px; object-fit:cover;" />
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="removeOldImage('@anh.DuongDan', this)">X</button>
+                                </div>
+                            }
+                        </div>
+
+                        @{
+                            var i = 0;
+                            foreach (var item in Model.AnhSanPham)
+                            {
+                                var path = Model.AnhSanPham.ToList()[i].DuongDan;
+                                <div data-path="@path" id="input-@i">
+                                    <input type="hidden" name="AnhSanPham[@i].Id" value="@item.Id" />
+                                    <input type="hidden" name="AnhSanPham[@i].MoTa" value="@item.MoTa" />
+                                    <input type="hidden" name="AnhSanPham[@i].DuongDan" value="@item.DuongDan" />
+                                    <input type="hidden" name="AnhSanPham[@i].IdSanPham" value="@item.IdSanPham" />
+                                </div>
+                                i++;
+                            }
+                        }
+
+
+                        <label class="form-label">Cập nhật ảnh mới (nếu có)</label>
+                        <input type="file" id="file-input" name="AnhMoi" multiple accept="image/*" class="form-control mb-3" onchange="previewMultipleImages(event)">
+
+                        <div id="preview-container" class="d-flex flex-wrap gap-2">
+                
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a href="/admin/sanpham" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        function removeOldImage(path, btn) {
+            // Xóa ảnh khỏi giao diện
+            btn.parentElement.remove();
+
+            // Xóa nhóm input ẩn theo path
+            const inputDivs = document.querySelectorAll(`[data-path="${path}"]`);
+            inputDivs.forEach(div => div.remove());
+
+            // Cập nhật lại chỉ số i cho các input còn lại
+            const allInputGroups = document.querySelectorAll('[data-path]');
+            allInputGroups.forEach((group, newIndex) => {
+                const inputs = group.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+
+                    if (name) {
+                        const updatedName = name.replace(/\[\d+\]/, `[${newIndex}]`);
+                        input.setAttribute('name', updatedName);
+                    }
+                });
+            });
+        }
+
+
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+
+        let selectedFiles = [];
+
+        function previewMultipleImages(event) {
+            const newFiles = Array.from(event.target.files);
+
+            // Thêm file mới (không reset)
+            selectedFiles = selectedFiles.concat(newFiles);
+
+            renderPreview();
+            updateInputFiles();
+        }
+
+        function renderPreview() {
+            previewContainer.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'position-relative';
+                    wrapper.style.width = '100px';
+                    wrapper.style.height = '100px';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'rounded border';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 rounded';
+                    removeBtn.onclick = function () {
+                        selectedFiles.splice(index, 1);
+                        renderPreview();
+                        updateInputFiles();
+                    };
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(wrapper);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateInputFiles() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            fileInput.files = dataTransfer.files;
+        }
+    </script>
+}
+
+
+
+}
+
+ 
