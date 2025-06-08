@@ -1,17 +1,8 @@
 ﻿@model QLThuCung.Models.HoaDonSanPham
 
 <div class="container">
-    <div class="mt-5 pt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/khach-hang">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="/khachhang/hoadonsanpham">Hóa đơn sản phẩm</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Chi tiết hóa đơn</li>
-            </ol>
-        </nav>
-    </div>
 
-    <div class="card card-invoice mx-auto shadow">
+    <div class="card card-invoice mx-auto shadow mt-5">
         <div class="card-header">
             THÔNG TIN HÓA ĐƠN
         </div>
@@ -20,7 +11,11 @@
                 <div class="mini-cardsubtitle card">Thông tin chung</div>
                 <div><strong>Khách hàng: </strong>@Model.KhachHang.HoTen</div>
                 <div><strong>Ngày đặt mua: </strong>@Model.NgayTao.ToString("dd/MM/yyyy")</div>
-                <div><strong>Phương thức thanh toán: </strong>@{var PTTT = Model.PhuongThucThanhToan == 0 ? "COD" : "VNPAY";} @PTTT</div>
+                <div>
+                    <strong>Phương thức thanh toán: </strong>@{
+                        var PTTT = Model.PhuongThucThanhToan == 0 ? "COD" : "VNPAY";
+                    } @PTTT
+                </div>
                 @{
                     string trangThaiText;
                     string trangThaiClass;
@@ -65,21 +60,22 @@
 
                 @{
                     decimal total = 0;
-                    @foreach(var item in Model.ChiTietHoaDonSanPham)
+                    @foreach (var item in Model.ChiTietHoaDonSanPham)
                     {
                         total += (item.DonGia * item.SoLuong);
                     }
                 }
                 <div><strong>Tổng tiền: </strong><span class="price">@total.ToString("N0") VNĐ</span></div>
-                <div><strong>Địa chỉ: </strong>
-                    <textarea class="form-control" disabled>@Model.DiaChi</textarea>    
+                <div>
+                    <strong>Địa chỉ: </strong>
+                    <textarea class="form-control" disabled>@Model.DiaChi</textarea>
                 </div>
             </div>
 
             <div class="card shadow p-4 my-4">
                 <div class="mini-cardsubtitle card">Danh sách sản phẩm</div>
                 <ul class="list-dichvu">
-                    @foreach(var item in Model.ChiTietHoaDonSanPham)
+                    @foreach (var item in Model.ChiTietHoaDonSanPham)
                     {
                         <li>
                             <div class="d-flex justify-content-between align-items-center">
@@ -97,7 +93,7 @@
             @if (Model.DanhGia.Any())
             {
                 <div class="card shadow p-4 mb-4">
-                    <div class="mini-cardsubtitle card">Đánh giá của bạn</div>
+                    <div class="mini-cardsubtitle card">Đánh giá của khách hàng</div>
                     <div>
                         <div>
                             <strong>Sao: </strong>
@@ -128,86 +124,70 @@
 
 
                     </div>
-
-                    <div class="mt-3">
-                        <button onclick="CancelComment(@Model.DanhGia.FirstOrDefault().Id)" class="btn btn-danger">Xóa</button>
-
-                    </div>
                 </div>
             }
 
+            @if (Model.TrangThai != 3)
+            {
+                <label>Cập nhật trạng thái</label>
+                <select id="status" class="p-2 w-100 rounded mt-2 mb-3">
+                    <option selected="@(Model.TrangThai==-1?true : false)" value="-1">Hủy</option>
+                    <option selected="@(Model.TrangThai==0?true : false)" value="0">Chờ xử lý</option>
+                    <option selected="@(Model.TrangThai==1?true : false)" value="1">Đã xử lý</option>
+                    <option selected="@(Model.TrangThai==2?true : false)" value="2">Chờ Thanh Toán</option>
+                    <option selected="@(Model.TrangThai==3?true : false)" value="3">Hoàn thành</option>
+                </select>
+            }
+
+
             <div class="card-footer">
                 @{
-                    if(Model.TrangThai == 3 && !Model.DanhGia.Any())
+                    // if (Model.TrangThai == 3 && !Model.DanhGia.Any())
+                    // {
+                    //     <a href="/admin/hoadondichvu/delete/@Model.Id" class="btn btn-primary">Xóa</a>
+                    // }
+                    if (Model.TrangThai != 3)
                     {
-                        <a href="/khachhang/hoadondichvu/danhgia/@Model.Id" class="btn btn-primary">Đánh giá</a>
-                    }   
-                    if(Model.TrangThai == 0)
-                    {
-                        <button class="btn btn-danger" onclick="Cancel(@Model.Id)">Hủy</button>
+                        <button class="btn btn-danger" onclick="Cancel(@Model.Id)">Cập nhật</button>
                     }
                 }
-            
-            <a href="/khachhang/hoadonsanpham" class="btn btn-secondary">Quay lại</a>
+
+                <a href="/employee/hoadonsanpham" class="btn btn-secondary">Quay lại</a>
+            </div>
         </div>
+
     </div>
 
-</div>
-
-@section Scripts{
-    <script>
-        function Cancel(id){
-            Swal.fire({
-            title: 'Xác nhận xóa?',
-            text: "Bạn có chắc chắn muốn hủy đơn này?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Xóa',
-            cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/khachhang/hoadonsanpham/huy/${id}`,
-                        type: 'DELETE',
-                        success: function () {
-                            toastr.success('Hủy thành công!');
-                            location.reload();
-                        },
-                        error: function () {
-                            toastr.error('Hủy thất bại!');
-                        }
-                    });
-                }
-            });
-        }
-
-        function CancelComment(id){
-            Swal.fire({
-            title: 'Xác nhận xóa?',
-            text: "Bạn có chắc chắn muốn xóa đánh giá này?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Xóa',
-            cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/khachhang/hoadonsanpham/danhgia/huy/${id}`,
-                        type: 'DELETE',
-                        success: function () {
-                            toastr.success('Hủy thành công!');
-                            location.reload();
-                        },
-                        error: function () {
-                            toastr.error('Hủy thất bại!');
-                        }
-                    });
-                }
-            });
-        }
-    </script>
-}
+    @section Scripts {
+        <script>
+            function Cancel(id) {
+                var selectedValue = $('#status').val();
+                Swal.fire({
+                    title: 'Xác nhận cập nhật?',
+                    text: "Bạn có chắc chắn muốn cập nhật đơn này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Cập nhật',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/employee/hoadonsanpham/update?id=${id}&status=${selectedValue}`,
+                            type: 'GET',
+                            success: function () {
+                                toastr.success('Cập nhật thành công!');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 3000);
+                            },
+                            error: function () {
+                                toastr.error('Cập nhật thất bại!');
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
+    }

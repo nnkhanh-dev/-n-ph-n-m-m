@@ -12,7 +12,7 @@ using QLThuCung.Models;
 namespace QLThuCung.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, NhanVien")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
