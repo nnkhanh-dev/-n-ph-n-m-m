@@ -1,0 +1,102 @@
+﻿@model QLThuCung.Models.HoaDonDichVu
+
+<div class="container">
+    <div class="mt-5 pt-3">
+        
+    </div>
+
+    <div class="card card-invoice mx-auto shadow">
+        <div class="card-header">
+            THÔNG TIN HÓA ĐƠN
+        </div>
+        <div class="card-body">
+            <div class="card shadow list-thongtin p-4 mt-2">
+                <div class="mini-cardsubtitle card">Thông tin chung</div>
+                <div><strong>Thú cưng: </strong>@Model.ThuCung.Ten</div>
+                <div><strong>Ngày chăm sóc: </strong>@Model.NgayChamSoc.ToString("dd/MM/yyyy")</div>
+                @{
+                    var soPhut = Model.ThoiGianChamSoc;
+                    var gio = soPhut / 60;
+                    var phut = soPhut % 60;
+                }
+                <div><strong>Thời gian chăm sóc: </strong>@gio giờ @phut phút</div>
+                <div><strong>Bắt đầu: </strong>@Model.BatDau?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Kết thúc: </strong>@Model.KetThuc?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Phương thức thanh toán: </strong>@{
+                        var PTTT = Model.PhuongThucThanhToan == 0 ? "Trả sau" : "VNPAY";
+                    } @PTTT</div>
+                @{
+                    string trangThaiText;
+                    string trangThaiClass;
+
+                    switch (Model.TrangThai)
+                    {
+                        case -1:
+                            trangThaiText = "Hủy";
+                            trangThaiClass = "bg-danger";
+                            break;
+                        case 0:
+                            trangThaiText = "Chờ xử lý";
+                            trangThaiClass = "bg-secondary";
+                            break;
+                        case 1:
+                            trangThaiText = "Đã xử lý";
+                            trangThaiClass = "bg-info text-dark";
+                            break;
+                        case 2:
+                            trangThaiText = "Chờ thanh toán";
+                            trangThaiClass = "bg-warning text-dark";
+                            break;
+                        case 3:
+                            trangThaiText = "Hoàn thành";
+                            trangThaiClass = "bg-success";
+                            break;
+                        case 4:
+                            trangThaiText = "Không đến";
+                            trangThaiClass = "bg-dark";
+                            break;
+                        default:
+                            trangThaiText = "Không xác định";
+                            trangThaiClass = "bg-dark";
+                            break;
+                    }
+                }
+                <div>
+                    <strong>Trạng thái: </strong>
+                    <span class="badge @trangThaiClass">@trangThaiText</span>
+                </div>
+                @{
+                    decimal total = 0;
+                    foreach (var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        total += item.DonGia;
+                    }
+                }
+                <div><strong>Tổng tiền: </strong><span class="price">@total.ToString("N0") VNĐ</span></div>
+            </div>
+
+            <div class="card shadow p-4 my-4">
+                <div class="mini-cardsubtitle card">Danh sách dịch vụ</div>
+                <ul class="list-dichvu">
+                    @foreach (var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        <li>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.DichVu.Ten</strong>
+                                </div>
+                                <div>
+                                    <span class="price">@item.DonGia.ToString("N0") VNĐ</span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-area="Admin" asp-controller="HoaDonDichVuAD" class="btn btn-primary">Chỉnh sửa</a>
+                <a asp-action="Index" asp-route-area="Admin" asp-controller="HoaDonDichVuAD" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>

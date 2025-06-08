@@ -1,0 +1,176 @@
+﻿@model QLThuCung.Models.HoaDonDichVu
+
+<div class="container">
+    <div class="mt-5 pt-3">
+    </div>
+
+    <div class="card card-invoice mx-auto shadow">
+        <div class="card-header">
+            THÔNG TIN HÓA ĐƠN
+        </div>
+        <div class="card-body">
+            <div class="card shadow list-thongtin p-4 mt-2">
+                <div class="mini-cardsubtitle card">Thông tin chung</div>
+                <div><strong>Thú cưng: </strong>@Model.ThuCung.Ten</div>
+                <div><strong>Ngày chăm sóc: </strong>@Model.NgayChamSoc.ToString("dd/MM/yyyy")</div>
+                @{
+                    var soPhut = Model.ThoiGianChamSoc;
+                    var gio = soPhut / 60;
+                    var phut = soPhut % 60;
+                }
+                <div><strong>Thời gian chăm sóc: </strong>@gio giờ @phut phút</div>
+                <div><strong>Bắt đầu: </strong>@Model.BatDau?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div><strong>Kết thúc: </strong>@Model.KetThuc?.ToString("dd/MM/yyyy HH:mm")</div>
+                <div>
+                    <strong>Phương thức thanh toán: </strong>@{
+                        var PTTT = Model.PhuongThucThanhToan == 0 ? "Trả sau" : "VNPAY";
+                    } @PTTT
+                </div>
+                @{
+                    string trangThaiText;
+                    string trangThaiClass;
+
+                    switch (Model.TrangThai)
+                    {
+                        case -1:
+                            trangThaiText = "Hủy";
+                            trangThaiClass = "bg-danger";
+                            break;
+                        case 0:
+                            trangThaiText = "Chờ xử lý";
+                            trangThaiClass = "bg-secondary";
+                            break;
+                        case 1:
+                            trangThaiText = "Đã xử lý";
+                            trangThaiClass = "bg-info text-dark";
+                            break;
+                        case 2:
+                            trangThaiText = "Chờ thanh toán";
+                            trangThaiClass = "bg-warning text-dark";
+                            break;
+                        case 3:
+                            trangThaiText = "Hoàn thành";
+                            trangThaiClass = "bg-success";
+                            break;
+                        case 4:
+                            trangThaiText = "Không đến";
+                            trangThaiClass = "bg-dark";
+                            break;
+                        default:
+                            trangThaiText = "Không xác định";
+                            trangThaiClass = "bg-dark";
+                            break;
+                    }
+                }
+                <div>
+                    <strong>Trạng thái: </strong>
+                    <span class="badge @trangThaiClass">@trangThaiText</span>
+                </div>
+                @{
+                    decimal total = 0;
+                    foreach (var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        total += item.DonGia;
+                    }
+                }
+                <div>
+                    <strong>Tổng tiền: </strong><span class="price">@total.ToString("N0") VNĐ</span>
+                </div>
+                <div class="form-group mt-3">
+                    <label><strong>Chọn giường: </strong></label>
+                    <select id="giuongComboBox" class="form-control" @(Model.TrangThai != 1 ? "disabled" : "")>
+                        @foreach (var giuong in ViewBag.Giuongs)
+                        {
+                            @if (ViewBag.SelectedGiuongId != null && ViewBag.SelectedGiuongId == giuong.Id)
+                            {
+                                <option value="@giuong.Id" selected>@giuong.MaGiuong</option>
+                            }
+                            else
+                            {
+                                <option value="@giuong.Id">@giuong.MaGiuong</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="card shadow p-4 my-4">
+                <div class="mini-cardsubtitle card">Danh sách dịch vụ</div>
+                <ul class="list-dichvu">
+                    @foreach (var item in Model.ChiTietHoaDonDichVu)
+                    {
+                        <li>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.DichVu.Ten</strong>
+                                </div>
+                                <div>
+                                    <span class="price">@item.DonGia.ToString("N0") VNĐ</span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="card-footer">
+                @{
+                    var isProcessed = Model.TrangThai == 1; // Đã xử lý
+                    var isOtherStatus = Model.TrangThai != 1; // Các trạng thái khác
+                }
+                <a class="btn btn-success btn-accept @(isProcessed ? "" : "disabled")" href="javascript:void(0)">Tiếp nhận</a>
+                <a class="btn btn-primary btn-complete @(isProcessed ? "disabled" : "disabled")" href="javascript:void(0)">Hoàn thành</a>
+                <a class="btn btn-secondary btn-back @(isOtherStatus ? "" : (isProcessed ? "" : "disabled"))"
+                   href="/Technician/HoaDonDichVuTechnician">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#giuongComboBox').prop('disabled', true);
+
+            var occupiedGiuongIds = @Html.Raw(Json.Serialize(ViewBag.OccupiedGiuongIds ?? new List<int>()));
+
+            $('#giuongComboBox option').each(function () {
+                var optionId = $(this).val();
+                if (occupiedGiuongIds.includes(parseInt(optionId)) && optionId !== "") {
+                    $(this).prop('disabled', true).addClass('disabled-option');
+                    console.log("Disabled option with ID:", optionId);
+                }
+            });
+
+            $('.btn-accept').on('click', function () {
+                $('.btn-accept').addClass('disabled');
+                $('.btn-back').addClass('disabled');
+                $('.btn-complete').removeClass('disabled');
+                $('#giuongComboBox').prop('disabled', false);
+            });
+
+            $('.btn-complete').on('click', function () {
+                var id = @Model.Id;
+                var giuongId = $('#giuongComboBox').val();
+
+                $.ajax({
+                    url: '/Technician/HoaDonDichVuTechnician/UpdateGiuong/' + id,
+                    method: 'POST',
+                    data: { idGiuong: giuongId },
+                    success: function (response) {
+                        if (response.success) {
+                            $('.btn-accept').addClass('disabled');
+                            $('.btn-complete').addClass('disabled');
+                            $('.btn-back').removeClass('disabled');
+                            $('#giuongComboBox').prop('disabled', true);
+                        }
+                    },
+                    error: function () {
+                        alert('Lỗi hệ thống, vui lòng thử lại.');
+                    }
+                });
+            });
+        });
+    </script>
+}
