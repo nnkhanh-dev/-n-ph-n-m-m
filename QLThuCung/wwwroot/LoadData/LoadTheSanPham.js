@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    LoadDanhMuc(); // Giả định hàm này đã có để tải danh mục
     LoadTheSanPham(); // Tải toàn bộ sản phẩm khi trang được tải
 
     // Biến để lưu trạng thái hiện tại

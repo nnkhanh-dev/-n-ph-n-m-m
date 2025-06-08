@@ -133,7 +133,6 @@
 
 .my_productlist{
     display: flex;
-    min-height: 1200px;
 }
 
 .my_servicecard {

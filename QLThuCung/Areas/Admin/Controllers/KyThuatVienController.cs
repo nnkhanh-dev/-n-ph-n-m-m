@@ -9,40 +9,40 @@ namespace QLThuCung.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class KhachHangController : Controller
+    public class KyThuatVienController : Controller
     {
-        private readonly IKhachHangAdminService _khachHang;
+        private readonly IKyThuatVienAdminService _kyThuatVien;
 
-        public KhachHangController(IKhachHangAdminService khachHang)
+        public KyThuatVienController(IKyThuatVienAdminService kyThuatVien)
         {
-            _khachHang = khachHang;
+            _kyThuatVien = kyThuatVien;
         }
 
-        [Route("admin/khachhang")]
+        [Route("admin/kythuatvien")]
         public async Task<IActionResult> Index()
         {
             return View();
         }
-        [Route("admin/khachhang/list")]
+        [Route("admin/kythuatvien/list")]
         public async Task<IActionResult> List()
         {
-            var list = await _khachHang.List();
+            var list = await _kyThuatVien.List();
             return Json(new { Data = list });
         }
-        [Route("admin/khachhang/chitiet/{id}")]
+        [Route("admin/kythuatvien/chitiet/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var details = await _khachHang.Details(id);
+            var details = await _kyThuatVien.Details(id);
             return View(details);
         }
-        [Route("admin/khachhang/chinhsua/{id}")]
+        [Route("admin/kythuatvien/chinhsua/{id}")]
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var details = await _khachHang.Details(id);
+            var details = await _kyThuatVien.Details(id);
             return View(details);
         }
-        [Route("admin/khachhang/chinhsua/{id}")]
+        [Route("admin/kythuatvien/chinhsua/{id}")]
         [HttpPost]
         public async Task<IActionResult> Edit(string id, NguoiDung model, IFormFile AnhMoi = null)
         {
@@ -75,7 +75,7 @@ namespace QLThuCung.Areas.Admin.Controllers
                 // Cập nhật đường dẫn file vào model hoặc thực hiện các thao tác khác cần thiết
                 model.AnhDaiDien = $"/Upload/{fileName}";
             }
-            var result = await _khachHang.Edit(id, model);
+            var result = await _kyThuatVien.Edit(id, model);
             if (result)
             {
                 TempData["Success"] = "Chỉnh sửa thành công!";
@@ -87,21 +87,21 @@ namespace QLThuCung.Areas.Admin.Controllers
                 return View();
             }
         }
-        [Route("admin/khachhang/xoa/{id}")]
+        [Route("admin/kythuatvien/xoa/{id}")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _khachHang.Delete(id);
+            var result = await _kyThuatVien.Delete(id);
             return Json(new { success = result });
         }
-        [Route("admin/khachhang/themmoi")]
+        [Route("admin/kythuatvien/themmoi")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             var user = new UserCTO();
             return View(user);
         }
-        [Route("admin/khachhang/themmoi")]
+        [Route("admin/kythuatvien/themmoi")]
         [HttpPost]
         public async Task<IActionResult> Create(UserCTO model, IFormFile AnhMoi = null)
         {
@@ -134,7 +134,7 @@ namespace QLThuCung.Areas.Admin.Controllers
                 // Cập nhật đường dẫn file vào model hoặc thực hiện các thao tác khác cần thiết
                 model.AnhDaiDien = $"/Upload/{fileName}";
             }
-            var result = await _khachHang.Create(model);
+            var result = await _kyThuatVien.Create(model);
             if (result)
             {
                 TempData["Success"] = "Thêm thành công!";
