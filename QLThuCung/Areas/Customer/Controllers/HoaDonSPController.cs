@@ -19,18 +19,22 @@ namespace QLThuCung.Areas.Customer.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly ISanPhamKHService _sanPham;
         private readonly IVNPayService _vnpayService;
+        private readonly IDanhGiaSPKHService _danhGia;
 
-        public HoaDonSPController(IHoaDonSPKHService hoaDon, UserManager<NguoiDung> userManager, ISanPhamKHService sanPham, IVNPayService vnpayService)
+        public HoaDonSPController(IHoaDonSPKHService hoaDon, UserManager<NguoiDung> userManager, ISanPhamKHService sanPham, IVNPayService vnpayService, IDanhGiaSPKHService danhGia)
         {
             _hoaDon = hoaDon;
             _userManager = userManager;
             _sanPham = sanPham;
             _vnpayService = vnpayService;
+            _danhGia = danhGia;
         }
 
         [Route("khachhang/hoadonsanpham")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.IdNguoiDung = user.Id;
             return View();
         }
 
@@ -98,17 +102,18 @@ namespace QLThuCung.Areas.Customer.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Dữ liệu không hợp lệ!";
-                return View(model);
+                return RedirectToAction("Index", "SanPham");
             }
             if (model.PhuongThucThanhToan == 1)
             {
                 model.MaThanhToan = model.NguoiTao + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
             }
+            model.NgayTao = DateTime.Now;
             var result = await _hoaDon.Create(model);
             if (!result)
             {
                 TempData["Error"] = "Đặt mua thất bại!";
-                return View(model);
+                return RedirectToAction("Index", "SanPham");
             }
             HttpContext.Session.Remove("PendingHoaDon");
             if (model.PhuongThucThanhToan == 1)
@@ -126,6 +131,81 @@ namespace QLThuCung.Areas.Customer.Controllers
                 TempData["Success"] = "Đặt mua thành công!";
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        [Route("khachhang/hoadonsanpham/listbycustomer/{id}")]
+        public async Task<IActionResult> ListByCustomer(string id)
+        {
+            var list = await _hoaDon.ListByCustomer(id);
+            return Json(new { Data = list });
+        }
+        [Route("khachhang/hoadonsanpham/chitiet/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var details = await _hoaDon.Details(id);
+            return View(details);
+        }
+
+        [Route("khachhang/hoadonsanpham/huy/{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var result = await _hoaDon.Cancel(id);
+            return Json(new { success = result });
+        }
+        [Route("khachhang/hoadonsanpham/danhgia/{id}")]
+        public async Task<IActionResult> Comment(int id)
+        {
+            var danhGia = new DanhGiaSP();
+            danhGia.IdHoaDon = id;
+            return View(danhGia);
+        }
+        [Route("khachhang/hoadonsanpham/danhgia/{idHoaDon}")]
+        [HttpPost]
+        public async Task<IActionResult> Comment(int idHoaDon, DanhGiaSP model, List<IFormFile> DanhSachAnh)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Dữ liệu không hợp lệ!";
+                return View(model);
+            }
+            if (DanhSachAnh != null && DanhSachAnh.Any())
+            {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Upload");
+
+                // Tạo thư mục nếu chưa có
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                foreach (var file in DanhSachAnh)
+                {
+                    if (file != null && file.Length > 0)
+                    {
+                        var uniqueFileName = $"{DateTime.Now.Ticks}_{Path.GetFileName(file.FileName)}";
+                        var filePath = Path.Combine(uploadPath, uniqueFileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        // Thêm vào danh sách tệp đính kèm
+                        model.TepDinhKem.Add(new TepDinhKemDanhGiaSP
+                        {
+                            Loai = 1,
+                            DuongDan = "/Upload/" + uniqueFileName
+                        });
+                    }
+                }
+            }
+            var result = await _danhGia.Create(model);
+            if (!result)
+            {
+                TempData["Error"] = "Thêm đánh giá thất bại!";
+                return View(model);
+            }
+            TempData["Success"] = "Thêm đánh giá thành công!";
+            return RedirectToAction("Details", new { id = model.IdHoaDon });
         }
     }
 }

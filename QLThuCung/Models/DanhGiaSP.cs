@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace QLThuCung.Models
 {
@@ -17,6 +18,8 @@ namespace QLThuCung.Models
         public DateTime NgayTao { get; set; }
         [ForeignKey(nameof(HoaDonSanPham))]
         public int IdHoaDon { get; set; }
+        [ValidateNever]
         public HoaDonSanPham HoaDonSanPham { get; set; }
+        public ICollection<TepDinhKemDanhGiaSP> TepDinhKem { get; set; }
     }
 }

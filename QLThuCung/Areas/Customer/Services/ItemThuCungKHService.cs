@@ -100,6 +100,7 @@ namespace QLThuCung.Areas.Customer.Services
             item.GhiChu = model.GhiChu;
             item.NguoiCapNhat = model.NguoiCapNhat;
             item.NgayCapNhat = model.NgayCapNhat;
+            item.IdGiong = model.IdGiong;
 
             try
             {
@@ -115,7 +116,10 @@ namespace QLThuCung.Areas.Customer.Services
 
         public async Task<IEnumerable<ThuCung>> List(string id)
         {
-            var list = await _context.ThuCung.Where(x => x.IdKhachHang == id).ToListAsync();
+            var list = await _context.ThuCung.Where(x => x.IdKhachHang == id)
+                                             .Include(x => x.Giong)
+                                             .ThenInclude(x => x.Loai)
+                                             .ToListAsync();
             return list;
         }
     }

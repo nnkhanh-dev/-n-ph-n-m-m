@@ -29,6 +29,11 @@ builder.Services.AddScoped<IDanhMucService, ItemDanhMucService>();
 builder.Services.AddScoped<ISanPhamKHService, ItemSanPhamKHService>();
 builder.Services.AddScoped<IGioHangKHService, ItemGioHangKHService>();
 builder.Services.AddScoped<IHoaDonSPKHService, ItemHoaDonSPKHService>();
+builder.Services.AddScoped<IThongKeService, ItemThongKeService>();
+builder.Services.AddScoped<IGiongKHService, ItemGiongKHService>();
+builder.Services.AddScoped<ILoaiKHService, ItemLoaiKHService>();
+builder.Services.AddScoped<IDanhGiaDVKHService, ItemDanhGiaDVKHService>();
+builder.Services.AddScoped<IDanhGiaSPKHService, ItemDanhGiaSPKHService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 // Add services to the container.

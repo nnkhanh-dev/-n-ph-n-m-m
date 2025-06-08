@@ -19,6 +19,7 @@ namespace QLThuCung.ViewModels
 
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Mật khẩu không khớp.")]
+        [Required(ErrorMessage = "Xác nhận mật khẩu là bắt buộc")]
         public string ConfirmPassword { get; set; }
     }
 }

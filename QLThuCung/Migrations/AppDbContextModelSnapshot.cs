@@ -530,6 +530,26 @@ namespace QLThuCung.Migrations
                     b.ToTable("Giong");
                 });
 
+            modelBuilder.Entity("QLThuCung.Models.Giuong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("MaGiuong")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MoTa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Giuong");
+                });
+
             modelBuilder.Entity("QLThuCung.Models.HoaDonDichVu", b =>
                 {
                     b.Property<int>("Id")
@@ -542,6 +562,9 @@ namespace QLThuCung.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("IdDipDacBiet")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdGiuong")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdPhieuGiamGia")
@@ -585,6 +608,8 @@ namespace QLThuCung.Migrations
 
                     b.HasIndex("IdDipDacBiet");
 
+                    b.HasIndex("IdGiuong");
+
                     b.HasIndex("IdPhieuGiamGia");
 
                     b.HasIndex("IdThuCung");
@@ -599,6 +624,10 @@ namespace QLThuCung.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DiaChi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdKhachHang")
                         .IsRequired()
@@ -1225,7 +1254,7 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.DanhGiaDV", b =>
                 {
                     b.HasOne("QLThuCung.Models.HoaDonDichVu", "HoaDonDichVu")
-                        .WithMany()
+                        .WithMany("DanhGia")
                         .HasForeignKey("IdHoaDon")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1272,6 +1301,10 @@ namespace QLThuCung.Migrations
                         .WithMany()
                         .HasForeignKey("IdDipDacBiet");
 
+                    b.HasOne("QLThuCung.Models.Giuong", "Giuong")
+                        .WithMany("HoaDon")
+                        .HasForeignKey("IdGiuong");
+
                     b.HasOne("QLThuCung.Models.PhieuGiamGia", "PhieuGiamGia")
                         .WithMany()
                         .HasForeignKey("IdPhieuGiamGia");
@@ -1283,6 +1316,8 @@ namespace QLThuCung.Migrations
                         .IsRequired();
 
                     b.Navigation("DipDacBiet");
+
+                    b.Navigation("Giuong");
 
                     b.Navigation("PhieuGiamGia");
 
@@ -1320,7 +1355,7 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.TepDinhKemDanhGiaDV", b =>
                 {
                     b.HasOne("QLThuCung.Models.DanhGiaDV", "DanhGiaDV")
-                        .WithMany()
+                        .WithMany("TepDinhKem")
                         .HasForeignKey("IdDanhGia")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1331,7 +1366,7 @@ namespace QLThuCung.Migrations
             modelBuilder.Entity("QLThuCung.Models.TepDinhKemDanhGiaSP", b =>
                 {
                     b.HasOne("QLThuCung.Models.DanhGiaSP", "DanhGiaSP")
-                        .WithMany()
+                        .WithMany("TepDinhKem")
                         .HasForeignKey("IdDanhGia")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1401,6 +1436,16 @@ namespace QLThuCung.Migrations
                     b.Navigation("TinNhan");
                 });
 
+            modelBuilder.Entity("QLThuCung.Models.DanhGiaDV", b =>
+                {
+                    b.Navigation("TepDinhKem");
+                });
+
+            modelBuilder.Entity("QLThuCung.Models.DanhGiaSP", b =>
+                {
+                    b.Navigation("TepDinhKem");
+                });
+
             modelBuilder.Entity("QLThuCung.Models.DanhMuc", b =>
                 {
                     b.Navigation("SanPham");
@@ -1420,9 +1465,16 @@ namespace QLThuCung.Migrations
                     b.Navigation("ChiTietGioHang");
                 });
 
+            modelBuilder.Entity("QLThuCung.Models.Giuong", b =>
+                {
+                    b.Navigation("HoaDon");
+                });
+
             modelBuilder.Entity("QLThuCung.Models.HoaDonDichVu", b =>
                 {
                     b.Navigation("ChiTietHoaDonDichVu");
+
+                    b.Navigation("DanhGia");
                 });
 
             modelBuilder.Entity("QLThuCung.Models.HoaDonSanPham", b =>

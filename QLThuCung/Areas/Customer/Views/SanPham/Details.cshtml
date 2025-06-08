@@ -144,6 +144,7 @@
                             </button>
                         </div>
                         <input type="hidden" id="idSanPham" value="@Model.Id"></input>
+                        <input type="hidden" id="SoLuongHienCon" value="@Model.SoLuong"></input>
                     </div>
                 </div>
             </div>
@@ -155,32 +156,45 @@
     <script>
         $(document).ready(function () {
             $("#themVaoGioHang").click(function () {
-                var chiTietGioHang = {
+                const soLuongHienCon = parseInt($('#SoLuongHienCon').val());
+                const soLuongMua = parseInt($('#quantity').val());
+
+                if(soLuongMua <= soLuongHienCon){
+                     var chiTietGioHang = {
                     IdSanPham: parseInt($('#idSanPham').val()),
                     SoLuong: parseInt($('#quantity').val()),
                     IdGioHang: 'temp'
-                };
+                    };
 
-                $.ajax({
-                    url: '/khachhang/giohang/taomoi',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(chiTietGioHang),
-                    success: function (response) {
-                        if (response.success) {
-                            toastr.success(response.message);
-                        } else {
-                            toastr.error(response.message);
+                    $.ajax({
+                        url: '/khachhang/giohang/taomoi',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(chiTietGioHang),
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success(response.message);
+                            } else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error('Đã có lỗi xảy ra, vui lòng thử lại !');
                         }
-                    },
-                    error: function () {
-                        toastr.error('Đã có lỗi xảy ra, vui lòng thử lại !');
-                    }
-                });
+                    });
+                }
+                else{
+                    toastr.error('Số lượng hiện còn không đủ!');
+                }
+               
             });
         });
 
         $("#muaNgay").click(function () {
+            const soLuongHienCon = parseInt($('#SoLuongHienCon').val());
+            const soLuongMua = parseInt($('#quantity').val());
+
+            if(soLuongMua <= soLuongHienCon){
                 var chiTietHoaDon = {
                     IdSanPham: parseInt($('#idSanPham').val()),
                     SoLuong: parseInt($('#quantity').val()),
@@ -207,6 +221,10 @@
                         toastr.error('Đã có lỗi xảy ra, vui lòng thử lại!');
                     }
                 });
-            });
+            }
+            else{
+                    toastr.error('Số lượng hiện còn không đủ!');
+                }
+        });
     </script>
 }

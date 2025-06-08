@@ -53,6 +53,10 @@
                             <p><strong>Tổng tiền: <span class="text-success">@total.ToString("N0") VNĐ</span></strong></p>
                         </div>
                         <div>
+                            <label asp-for="DiaChi" class="mb-2 mt-3"><strong>Địa chỉ</strong></label>
+                            <textarea asp-for="DiaChi" class="form-control"></textarea>
+                        </div>
+                        <div>
                             <label asp-for="PhuongThucThanhToan" class="mb-2 mt-3"><strong>Phương thức thanh toán</strong></label>
                             <select asp-for="PhuongThucThanhToan" class="form-control">
                                 <option value="0">Thanh toán khi nhận hàng (COD)</option>
