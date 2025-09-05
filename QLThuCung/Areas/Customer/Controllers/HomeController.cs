@@ -24,7 +24,7 @@ namespace QLThuCung.Customer.Controllers
             _vnpayService = vnpayService;
             _context = context;
         }
-        [Route("/khach-hang/")]
+        [Route("/khach-hang")]
         public async Task<IActionResult> Index()
         {
             if (Request.Query.Keys.Any(k => k.StartsWith("vnp_")))
